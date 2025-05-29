@@ -44,8 +44,13 @@ private:
 // Add other random functions for NN initialisation (He and Xavier)
 // Implement inverse helper
 // Implement better constructor functions 
+// Implement / % && || ~ ect
 // Add resize
 // Add insert col/row
+// Implement assignment operators (inplace) += *= /=
+//
+// WARNING:
+// NEED TO ADD DOCUMENTATION
 //
 //  NOTE: 
 //  static_assert(std::is_floating_point<T>::value, "randomXavier requires floating point types");
