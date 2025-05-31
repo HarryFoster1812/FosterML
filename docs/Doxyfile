@@ -1,0 +1,56 @@
+# Doxyfile 1.9.6
+
+# Project related configuration options
+PROJECT_NAME           = ""
+PROJECT_BRIEF          = "A simplistic Machine Learning library"
+OUTPUT_DIRECTORY       = .
+CREATE_SUBDIRS         = NO
+
+# Build related configuration options
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+EXTRACT_LOCAL_CLASSES  = YES
+
+# Input
+INPUT                  = ../include
+RECURSIVE              = YES
+FILE_PATTERNS          = *.hpp *.tpp *.cpp *.h
+
+# Output formats
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = YES
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_XML           = NO
+GENERATE_DOCBOOK       = NO
+
+# Appearance and layout
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_FORMAT            = "$file:$line: $text"
+
+# Source browsing
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+
+# Dot (graphviz) support for diagrams (optional)
+HAVE_DOT               = NO
+
+# Misc
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+GENERATE_TREEVIEW      = YES
+
+# Output language
+OUTPUT_LANGUAGE        = English
+
+# Tab size in source code
+TAB_SIZE               = 4
+
+# File version filter (not used here)
+FILTER_PATTERNS        = 
