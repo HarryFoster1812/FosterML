@@ -1,13 +1,14 @@
 #pragma once
 #include <iostream>
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
-#include "./matrix.cpp"
+template <typename T> class Matrix {
+  private:
+    int rows, cols;
+    std::vector<T> data;
 
-template <typename T>
-class Matrix {
-public:
+  public:
     Matrix() : rows(0), cols(0) {}
     Matrix(int rows, int cols, const T& initVal = T());
     Matrix(const Matrix& other) = default;
@@ -24,29 +25,27 @@ public:
     Matrix<T> operator*(const Matrix<T>& other) const;
     Matrix<T> operator*(const T& scalar) const;
 
-
     Matrix<T> transpose() const;
+    T& determinant() const;
     static Matrix<T> identityMatrix(int size);
 
     static Matrix<T> randomMatrix(int rows, int cols, T minValue, T maxValue);
+    static Matrix<T> randomGorat(int rows, int cols, T minValue, T maxValue);
+    static Matrix<T> randomHe(int rows, int cols, T minValue, T maxValue);
 
     void print(std::ostream& os = std::cout) const;
 
-    int rows() const { return rows; }
-    int cols() const { return cols; }
-
-private:
-    int rows, cols;
-    std::vector<std::vector<T>> data;
+    int getRows() const { return rows; }
+    int getCols() const { return cols; }
 };
 
+#include "Matrix.tpp"
 
 // TODO:
-// Rewite to use 1d vector for optimisation 
 // Add other random functions for NN initialisation (He and Xavier)
 // Implement inverse helper
-// Implement better constructor functions 
-// Implement / % && || ~ ect
+// Implement better constructor functions
+// Implement / % ect
 // Add resize
 // Add insert col/row
 // Implement assignment operators (inplace) += *= /=
@@ -54,7 +53,7 @@ private:
 // WARNING:
 // NEED TO ADD DOCUMENTATION
 //
-//  NOTE: 
-//  static_assert(std::is_floating_point<T>::value, "randomXavier requires floating point types");
-//  constructor: std::initializer_list<T>
-//  constructor: std::vector<T>
+//  NOTE:
+//  static_assert(std::is_floating_point<T>::value, "randomXavier requires
+//  floating point types"); constructor: std::initializer_list<T> constructor:
+//  std::vector<T>
