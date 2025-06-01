@@ -1,6 +1,5 @@
 #pragma once
-#include <iostream>
-#include <stdexcept>
+#include <stdio.h>
 #include <vector>
 
 /**
@@ -185,7 +184,7 @@ template <typename T> class Matrix {
     int getCols() const { return cols; }
 };
 
-#include "Matrix.tpp"
+#include "./Matrix.tpp"
 
 // TODO:
 // Add other random functions for NN initialisation (He and Xavier)

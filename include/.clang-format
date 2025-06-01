@@ -1,4 +1,6 @@
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
+CompileFlags:
+  Remove: [-march=*]
 PointerAlignment: Left
