@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <vector>
 
-template <typename T> 
+template <typename T>
 class Tensor : public std::enable_shared_from_this<Tensor<T>> {
   friend class AutoDiffEngine;
 
@@ -30,7 +30,7 @@ public:
       total_size *= dim;
     data.resize(total_size);
     if (requires_gradient)
-            gradient = std::unique_ptr<Tensor<T>>(new Tensor<T>(shape_, false));
+      gradient = std::unique_ptr<Tensor<T>>(new Tensor<T>(shape_, false));
   }
 
   T &operator()(const std::initializer_list<int> &index_values) const;
@@ -41,19 +41,20 @@ public:
   const Tensor<T> &getGrad() const { return *gradient; }
   const std::vector<std::shared_ptr<Tensor<T>>> getParents() { return parents; }
 
-
-    // Add parent by shared_ptr
-    void addParent(const std::shared_ptr<Tensor<T>>& parent) {
-        if (!parents_) {
-            parents_ = std::make_shared<std::vector<std::weak_ptr<Tensor<T>>>>();
-        }
-        parents_->push_back(parent);
+  // Add parent by shared_ptr
+  void addParent(const std::shared_ptr<Tensor<T>> &parent) {
+    if (!parents) {
+      parents = std::make_shared<std::vector<std::weak_ptr<Tensor<T>>>>();
     }
+    parents->push_back(parent);
+  }
 
-    // Add parent by reference (requires that the tensor can provide shared_ptr to itself)
-    void addParent(const Tensor<T>& parent) {
-        addParent(parent.shared_from_this());
-    }  bool requiresGrad() const { return requires_gradient; }
+  // Add parent by reference (requires that the tensor can provide shared_ptr to
+  // itself)
+  void addParent(const Tensor<T> &parent) {
+    addParent(parent.shared_from_this());
+  }
+  bool requiresGrad() const { return requires_gradient; }
 
   void zeroGrad() {
     if (requires_gradient) {
@@ -63,10 +64,10 @@ public:
     }
   }
 
- void addGrad(const Tensor<T>& grad){
-        if(requires_gradient)
-        gradient->add(grad);
-    }
+  void addGrad(const Tensor<T> &grad) {
+    if (requires_gradient)
+      gradient->add(grad);
+  }
 
   void setData(const std::vector<T> &new_data) {
     if (new_data.size() != data.size())
@@ -197,6 +198,7 @@ protected:
 };
 
 #include "Tensor.tpp"
+#include "AutoDiffEngine.hpp"
 
 /*
 TODO:
