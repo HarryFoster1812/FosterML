@@ -4,6 +4,16 @@
 #include <stdexcept>
 #include <vector>
 
+/*
+NOTE:
+ONCE THIS IS FINISHED AND WORKING DO NOT TOUCH IT - WHATEVER THE PROBLEM IS WORK
+AROUND IT. I APPOLOGISE IN ADVANCE FOR THE TERRIBLE CODE (THIS IS MY FIRST TIME
+WORKING IN C++)
+
+I DO UNDERSTAND THAT SHARED POINTERS ARE BETTER BECAUSE YOU DONT NEED TO
+MANUALLY TRACK THE LIFETIME BUT GOD DANM THEY ARE ANNOYING TO DEAL WITH
+ */
+
 template <typename T> class AutoDiffEngine;
 template <typename T>
 class Tensor : public std::enable_shared_from_this<Tensor<T>> {
@@ -76,7 +86,6 @@ public:
 
   void addGrad(const Tensor<T> &grad) const {
     if (requires_gradient) {
-      grad.print();
       gradient->addInPlace(grad);
     }
   }
@@ -129,6 +138,17 @@ public:
   Tensor<T> add(const Tensor<T> &other) const;
   Tensor<T> add(const T &scalar) const;
 
+  Tensor<T> subtract(const Tensor<T> &other) const;
+  Tensor<T> subtract(const T &scalar) const;
+
+  Tensor<T> multiply(const Tensor<T> &other) const;
+  Tensor<T> multiply(const T &scalar) const;
+
+  Tensor<T> divide(const Tensor<T> &other) const;
+  Tensor<T> divide(const T &scalar) const;
+
+    Tensor<T> negate() const;
+
   // Element Wise operations
   void computeStrides() {
     strides.resize(shape.size());
@@ -139,10 +159,13 @@ public:
     }
   }
 
+
   /**
    * This is the top level function which should only be called on loss/output
    * tensor
    */
+
+  Tensor<T> sum(const std::vector<int> &axis, bool keepdims) const;
 
   Tensor<T> broadcast_to(const std::vector<int> &new_shape) const;
   // Batch Multiplication
@@ -162,6 +185,12 @@ public:
     return false; // overflow, end of iteration
   }
 
+  // Given an input gradient which has been broacasted it will output a tensor
+  // with the same shape of the target which the gradient has been reduced to
+  static Tensor<T> sum_over_broadcasted_axes(const Tensor<T> &gradient,
+                                             const Tensor<T> &target);
+
+  void unravel_index(int flat_index, std::vector<int> &indices_out) const;
   void print() const;
 
 protected:
@@ -247,7 +276,6 @@ setData
 setBackwardsFunction
 computeStrides
 add(const Tensor<T>&)
-_backwards
 reshape
 operator*
 operator+
