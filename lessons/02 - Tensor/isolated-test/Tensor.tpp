@@ -239,47 +239,46 @@ template <typename T> Tensor<T> Tensor<T>::subtract(const T &scalar) const {
   return this->subtract(scalarTensor);
 }
 
-
 template <typename T>
 Tensor<T> Tensor<T>::multiply(const Tensor<T> &other) const {
 
   auto add_op = [](const T &a, const T &b) { return a * b; };
   std::function<void(const Tensor<T> &)> backward_op;
-    try {
-        auto this_shared = this->getSharedPtr();
-        auto other_shared = other.getSharedPtr();
-        backward_op = [this_ptr = this_shared,
-            other_ptr = other_shared](const Tensor<T> &result) {
-                // std::cout << "IN THE BACKWARDS_OPERATION" << std::endl;
-                const Tensor<T> &grad = result.getGrad();
-                if (this_ptr->requiresGrad()) {
-                    Tensor<T> grad_A = grad.multiply(*other_ptr);
-                    if (this_ptr->getShape() != grad_A.getShape()) {
-                        grad_A = Tensor<T>::sum_over_broadcasted_axes(
-                            grad_A, this_ptr->getShape());
-                        this_ptr->addGrad(grad_A);
-                    } else {
-                        this_ptr->addGrad(grad_A);
-                    }
-                }
+  try {
+    auto this_shared = this->getSharedPtr();
+    auto other_shared = other.getSharedPtr();
+    backward_op = [this_ptr = this_shared,
+                   other_ptr = other_shared](const Tensor<T> &result) {
+      // std::cout << "IN THE BACKWARDS_OPERATION" << std::endl;
+      const Tensor<T> &grad = result.getGrad();
+      if (this_ptr->requiresGrad()) {
+        Tensor<T> grad_A = grad.multiply(*other_ptr);
+        if (this_ptr->getShape() != grad_A.getShape()) {
+          grad_A = Tensor<T>::sum_over_broadcasted_axes(grad_A,
+                                                        this_ptr->getShape());
+          this_ptr->addGrad(grad_A);
+        } else {
+          this_ptr->addGrad(grad_A);
+        }
+      }
 
-                if (other_ptr->requiresGrad()) {
-                    Tensor<T> grad_B = grad.multiply(*this_ptr);
-                    if (other_ptr->getShape() != grad_B.getShape()) {
-                        grad_B = Tensor<T>::sum_over_broadcasted_axes(
-                            grad_B, other_ptr->getShape());
-                        other_ptr->addGrad(grad_B);
-                    } else {
-                        other_ptr->addGrad(grad_B);
-                    }
-                }
-            };
-    } catch (const std::bad_weak_ptr &e) {
-        std::cerr << "BACKWARDS_OPERATION BAD WEAK PTR" << std::endl;
-        throw;
-    }
+      if (other_ptr->requiresGrad()) {
+        Tensor<T> grad_B = grad.multiply(*this_ptr);
+        if (other_ptr->getShape() != grad_B.getShape()) {
+          grad_B = Tensor<T>::sum_over_broadcasted_axes(grad_B,
+                                                        other_ptr->getShape());
+          other_ptr->addGrad(grad_B);
+        } else {
+          other_ptr->addGrad(grad_B);
+        }
+      }
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BACKWARDS_OPERATION BAD WEAK PTR" << std::endl;
+    throw;
+  }
 
-    return element_op(*this, other, add_op, backward_op);
+  return element_op(*this, other, add_op, backward_op);
 }
 
 template <typename T> Tensor<T> Tensor<T>::multiply(const T &scalar) const {
@@ -290,58 +289,56 @@ template <typename T> Tensor<T> Tensor<T>::multiply(const T &scalar) const {
   return this->multiply(scalarTensor);
 }
 
-
-
 template <typename T>
 Tensor<T> Tensor<T>::divide(const Tensor<T> &other) const {
 
   auto add_op = [](const T &a, const T &b) { return a / b; };
   std::function<void(const Tensor<T> &)> backward_op;
-    try {
-        auto this_shared = this->getSharedPtr();
-        auto other_shared = other.getSharedPtr();
-        backward_op = [this_ptr = this_shared,
-            other_ptr = other_shared](const Tensor<T> &result) {
-                // for division C = A/B
-                // \partial C w.r.t A = 1/B 
-                // std::cout << "IN THE BACKWARDS_OPERATION" << std::endl;
-                const Tensor<T> &grad = result.getGrad();
-                if (this_ptr->requiresGrad()) {
-                    Tensor<T> grad_A = grad.divide(*other_ptr);
+  try {
+    auto this_shared = this->getSharedPtr();
+    auto other_shared = other.getSharedPtr();
+    backward_op = [this_ptr = this_shared,
+                   other_ptr = other_shared](const Tensor<T> &result) {
+      // for division C = A/B
+      // \partial C w.r.t A = 1/B
+      // std::cout << "IN THE BACKWARDS_OPERATION" << std::endl;
+      const Tensor<T> &grad = result.getGrad();
+      if (this_ptr->requiresGrad()) {
+        Tensor<T> grad_A = grad.divide(*other_ptr);
 
-                    if (this_ptr->getShape() != grad_A.getShape()) {
-                        grad_A = Tensor<T>::sum_over_broadcasted_axes(
-                            grad_A, this_ptr->getShape());
-                        
-                        this_ptr->addGrad(grad_A);
-                    
-                    } else {
-                        this_ptr->addGrad(grad_A);
-                    }
-                }
+        if (this_ptr->getShape() != grad_A.getShape()) {
+          grad_A = Tensor<T>::sum_over_broadcasted_axes(grad_A,
+                                                        this_ptr->getShape());
 
-                // \partial C w.r.t B = -A/B^2
-                if (other_ptr->requiresGrad()) {
-                    Tensor<T> grad_B = grad.multiply(*this_ptr).negate(); // grad * -A
-                    Tensor<T> B_squred = (*other_ptr).multiply(*other_ptr); // grad * -A
-                    grad_B = grad_B.divide(B_squred); // grad *(-A/b^2)
-                    if (other_ptr->getShape() != grad_B.getShape()) {
-                        grad_B = Tensor<T>::sum_over_broadcasted_axes(
-                            grad_B, other_ptr->getShape());
-                    
-                        other_ptr->addGrad(grad_B);
-                    
-                    } else {
-                        other_ptr->addGrad(grad_B);
-                    }
-                }
-            };
-    } catch (const std::bad_weak_ptr &e) {
-        std::cerr << "BACKWARDS_OPERATION BAD WEAK PTR" << std::endl;
-        throw;
-    }
+          this_ptr->addGrad(grad_A);
 
-    return element_op(*this, other, add_op, backward_op);
+        } else {
+          this_ptr->addGrad(grad_A);
+        }
+      }
+
+      // \partial C w.r.t B = -A/B^2
+      if (other_ptr->requiresGrad()) {
+        Tensor<T> grad_B = grad.multiply(*this_ptr).negate();   // grad * -A
+        Tensor<T> B_squred = (*other_ptr).multiply(*other_ptr); // grad * -A
+        grad_B = grad_B.divide(B_squred); // grad *(-A/b^2)
+        if (other_ptr->getShape() != grad_B.getShape()) {
+          grad_B = Tensor<T>::sum_over_broadcasted_axes(grad_B,
+                                                        other_ptr->getShape());
+
+          other_ptr->addGrad(grad_B);
+
+        } else {
+          other_ptr->addGrad(grad_B);
+        }
+      }
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BACKWARDS_OPERATION BAD WEAK PTR" << std::endl;
+    throw;
+  }
+
+  return element_op(*this, other, add_op, backward_op);
 }
 
 template <typename T> Tensor<T> Tensor<T>::divide(const T &scalar) const {
@@ -354,8 +351,9 @@ template <typename T> Tensor<T> Tensor<T>::divide(const T &scalar) const {
 
 // Element Wise operations
 
-template <typename T, typename Op >
-Tensor<T> elementwise_op(const Tensor<T> &A, Op op) {
+template <typename T, typename Op>
+Tensor<T> elementwise_op(const Tensor<T> &A, Op op,
+                         std::function<void(const Tensor<T> &)> backward_op) {
   // Broadcast shapes
 
   // Create result tensor
@@ -368,6 +366,17 @@ Tensor<T> elementwise_op(const Tensor<T> &A, Op op) {
     result(index) = op(A(index));
   } while (Tensor<T>::incrementIndex(index, result.getShape()));
 
+  if (result.requiresGrad()) {
+    result.setBackwardFunction(backward_op);
+    try {
+      auto A_shared = A.getSharedPtr();
+      result.addParent(A_shared);
+    } catch (const std::bad_weak_ptr &e) {
+      std::cerr << "bad_weak_ptr for in element_op" << std::endl;
+      throw;
+    }
+  }
+
   return result;
 }
 
@@ -376,9 +385,177 @@ Tensor<T> Tensor<T>::negate() const // element-wise negation (-x)
 {
   auto op = [](const T &a) { return -a; };
 
-  return elementwise_op(*this, op);
+  std::function<void(const Tensor<T> &)> backward_op;
+
+  try {
+    auto this_shared = this->getSharedPtr();
+    backward_op = [a_ptr = this_shared](const Tensor<T> &result) {
+      const Tensor<T> &grad = result.getGrad();
+
+      // partial z / partial x = -1
+      Tensor<T> grad_A = grad.negate();
+      a_ptr->addGrad(grad_A);
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BAD WEAK PTR IN UNARAY BACKWARDS FUNCTION" << std::endl;
+  }
+
+  return elementwise_op(*this, op, backward_op);
+}
+
+template <typename T>
+Tensor<T> Tensor<T>::abs() const // element-wise negation (-x)
+{
+  auto op = [](const T &a) { return a < 0 ? -a : a; };
+
+  std::function<void(const Tensor<T> &)> backward_op;
+
+  try {
+    auto this_shared = this->getSharedPtr();
+    backward_op = [a_ptr = this_shared](const Tensor<T> &result) {
+      const Tensor<T> &grad = result.getGrad();
+
+      // partial z / partial x = -1
+      Tensor<T> sign_tensor = (*a_ptr).sign();
+      a_ptr->addGrad(grad * sign_tensor);
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BAD WEAK PTR IN UNARAY BACKWARDS FUNCTION" << std::endl;
+  }
+
+  return elementwise_op(*this, op, backward_op);
+}
+
+template <typename T>
+Tensor<T> Tensor<T>::sqrt() const // element-wise square root
+{
+  auto op = [](const T &a) { return std::sqrt(a); };
+
+  std::function<void(const Tensor<T> &)> backward_op;
+
+  try {
+    auto this_shared = this->getSharedPtr();
+    backward_op = [a_ptr = this_shared](const Tensor<T> &result) {
+      const Tensor<T> &grad = result.getGrad();
+
+      // partial z / partial x = 1/(2*sqrt(x))
+      Tensor<T> denominator = result.multiply(2);
+      a_ptr->addGrad(grad.divide(denominator));
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BAD WEAK PTR IN UNARAY BACKWARDS FUNCTION" << std::endl;
+  }
+
+  return elementwise_op(*this, op, backward_op);
+}
+
+template <typename T>
+Tensor<T> Tensor<T>::exp() const // element-// element-wise exponentiation
+{
+  auto op = [](const T &a) { return std::exp(a); };
+
+  std::function<void(const Tensor<T> &)> backward_op;
+
+  try {
+    auto this_shared = this->getSharedPtr();
+    backward_op = [a_ptr = this_shared](const Tensor<T> &result) {
+      const Tensor<T> &grad = result.getGrad();
+
+      // partial z / partial x = exp(x)
+      a_ptr->addGrad(grad.multiply(result));
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BAD WEAK PTR IN UNARAY BACKWARDS FUNCTION" << std::endl;
+  }
+
+  return elementwise_op(*this, op, backward_op);
+}
+
+template <typename T>
+Tensor<T> Tensor<T>::log() const // element-// element-wise natural logarithm
+{
+  auto op = [](const T &a) { return std::log(a); };
+
+  std::function<void(const Tensor<T> &)> backward_op;
+
+  try {
+    auto this_shared = this->getSharedPtr();
+    backward_op = [a_ptr = this_shared](const Tensor<T> &result) {
+      const Tensor<T> &grad = result.getGrad();
+
+      // partial z / partial x = 1/x
+      a_ptr->addGrad(grad.divide(*a_ptr));
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BAD WEAK PTR IN UNARAY BACKWARDS FUNCTION" << std::endl;
+  }
+
+  return elementwise_op(*this, op, backward_op);
+}
+
+template <typename T>
+Tensor<T> Tensor<T>::sigmoid() const // element-// element-wise sigmoid
+{
+  auto op = [](const T &a) { return (T(1)) / (T(1) + std::exp(-a)); };
+
+  std::function<void(const Tensor<T> &)> backward_op;
+
+  try {
+    auto this_shared = this->getSharedPtr();
+    backward_op = [a_ptr = this_shared](const Tensor<T> &result) {
+      const Tensor<T> &grad = result.getGrad();
+
+      // partial z / partial x = sigmoid *(1-sigmoid)
+      const Tensor<T> scaling_tensor = result.multiply(result.subtract(1));
+      a_ptr->addGrad(grad.multiply(scaling_tensor));
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BAD WEAK PTR IN UNARAY BACKWARDS FUNCTION" << std::endl;
+  }
+
+  return elementwise_op(*this, op, backward_op);
+}
+
+template <typename T>
+Tensor<T> Tensor<T>::tanh() const // element-// element-wise hyperbolic tangent
+{
+  auto op = [](const T &a) { return std::tanh(a); };
+
+  std::function<void(const Tensor<T> &)> backward_op;
+
+  try {
+    auto this_shared = this->getSharedPtr();
+    backward_op = [a_ptr = this_shared](const Tensor<T> &result) {
+      const Tensor<T> &grad = result.getGrad();
+
+      // partial z / partial x = 1-tanh^2
+      const Tensor<T> scaling_tensor = result.multiply(result).negate().add(1);
+      a_ptr->addGrad(grad.multiply(scaling_tensor));
+    };
+  } catch (const std::bad_weak_ptr &e) {
+    std::cerr << "BAD WEAK PTR IN UNARAY BACKWARDS FUNCTION" << std::endl;
+  }
+
+  return elementwise_op(*this, op, backward_op);
 }
 // Util functions
+
+template <typename T> Tensor<T> Tensor<T>::sign() const {
+  Tensor<T> result(shape, false);
+
+  // Calculate the result
+  std::vector<T> result_Data = result.getData();
+
+  for (int i = 0; i < data.size(); ++i) {
+    if (data > 0)
+      result_Data[i] = T(1);
+    else if (data < 0)
+      result_Data[i] = T(-1);
+    else
+      result_Data[i] = T(0);
+  }
+  return result;
+}
 
 template <typename T>
 std::vector<int> Tensor<T>::infer_broadcast_shape(const Tensor<T> &tensorA,
@@ -491,8 +668,7 @@ void Tensor<T>::printRecursive(std::vector<int> &indices, int dim,
     std::cout << "[";
     for (int i = 0; i < shape[dim]; ++i) {
       indices[dim] = i;
-      std::cout << std::setw(8) << std::fixed << std::setprecision(4)
-                << (*this)(indices);
+      std::cout << std::setw(8) << std::setprecision(17) << (*this)(indices);
       if (i < shape[dim] - 1)
         std::cout << ", ";
     }
@@ -636,10 +812,10 @@ Tensor<T> Tensor<T>::sum_over_broadcasted_axes(const Tensor<T> &gradient,
 
 /*
 TODO:
-- CREATE A SUM OVER BROADCAST AXIS SO THAT BACKWARDS PASS WORKS FOR BROADCASTED
-TENSORS
-- USING THE SAME FUNCTIONS IMPLEMENT OTHER (EMELENT-WISE) OPERATIONS (SUB, DIV,
-MUL)
+- CREATE A SUM OVER BROADCAST AXIS SO THAT BACKWARDS PASS WORKS FOR
+BROADCASTED TENSORS
+- USING THE SAME FUNCTIONS IMPLEMENT OTHER (EMELENT-WISE) OPERATIONS (SUB,
+DIV, MUL)
 - IMPLEMENT MATRIX MUL AND BATCH MATRIX MUL AS WELL AS FIGURE OUT THE PARTAIL
 DIFF FOR THEM
 - ADD MORE HELPER FUNCTIONS

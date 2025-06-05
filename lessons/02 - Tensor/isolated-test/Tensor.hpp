@@ -147,9 +147,15 @@ public:
   Tensor<T> divide(const Tensor<T> &other) const;
   Tensor<T> divide(const T &scalar) const;
 
-    Tensor<T> negate() const;
-
   // Element Wise operations
+  Tensor<T> negate() const;
+  Tensor<T> abs() const;     // element-wise absolute value
+  Tensor<T> sqrt() const;    // element-wise square root
+  Tensor<T> exp() const;     // element-wise exponentiation
+  Tensor<T> log() const;     // element-wise natural logarithm
+  Tensor<T> sigmoid() const; // element-wise sigmoid
+  Tensor<T> tanh() const;    // element-wise hyperbolic tangent
+  Tensor<T> sign() const;
   void computeStrides() {
     strides.resize(shape.size());
     int stride = 1;
@@ -158,7 +164,6 @@ public:
       stride *= shape[i];
     }
   }
-
 
   /**
    * This is the top level function which should only be called on loss/output
