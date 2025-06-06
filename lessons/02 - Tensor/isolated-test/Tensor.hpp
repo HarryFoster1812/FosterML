@@ -1,5 +1,4 @@
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -165,18 +164,19 @@ public:
     }
   }
 
-  /**
-   * This is the top level function which should only be called on loss/output
-   * tensor
-   */
+  Tensor<T> matrixmul(const Tensor<T> &other) const;
 
   Tensor<T> sum(const std::vector<int> &axis, bool keepdims) const;
 
-  Tensor<T> broadcast_to(const std::vector<int> &new_shape) const;
-  // Batch Multiplication
+  Tensor<T> broadcast_to(const std::vector<int> &new_shape,
+                         bool matrix_mul = false) const;
 
+  Tensor<T> transpose(int dim1, int dim2) const;
   static std::vector<int> infer_broadcast_shape(const Tensor<T> &tensorA,
                                                 const Tensor<T> &tensorB);
+
+  static std::vector<int> infer_broadcast_shape(const std::vector<int> &shapeA,
+                                                const std::vector<int> &shapeB);
 
   static bool incrementIndex(std::vector<int> &index,
                              const std::vector<int> &shape) {

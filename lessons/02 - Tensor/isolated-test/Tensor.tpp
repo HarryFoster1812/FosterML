@@ -7,9 +7,11 @@
 #include <ios>
 #include <iostream>
 #include <locale>
+#include <memory>
 #include <numeric> // for std::iota
 #include <ostream>
 #include <stdexcept>
+#include <type_traits>
 #include <vector>
 // CONSTRUCTOR FUNCTIONS
 
@@ -538,6 +540,128 @@ Tensor<T> Tensor<T>::tanh() const // element-// element-wise hyperbolic tangent
 
   return elementwise_op(*this, op, backward_op);
 }
+
+std::vector<int> concat_vec(const std::vector<int> &a,
+                            const std::vector<int> &b) {
+  std::vector<int> result = a;
+  result.insert(result.end(), b.begin(), b.end());
+  return result;
+}
+
+// this @ other
+template <typename T>
+Tensor<T> Tensor<T>::matrixmul(const Tensor<T> &other) const {
+  const auto &shapeA = this->shape;
+  const auto &shapeB = other.getShape();
+
+  int ndimA = shapeA.size();
+  int ndimB = shapeB.size();
+
+  if (ndimA < 2 || ndimB < 2) {
+    throw std::invalid_argument(
+        "Both tensors must be at least 2D for matrix multiplication");
+  }
+
+  int M = shapeA[ndimA - 2];
+  int N = shapeA[ndimA - 1];
+  int N2 = shapeB[ndimB - 2];
+  int P = shapeB[ndimB - 1];
+
+  std::cout << shapeA << std::endl;
+  std::cout << shapeB << std::endl;
+
+  if (N != N2) {
+    throw std::invalid_argument("Inner dimensions for matmul must match: "
+                                "A(..., M, N) @ B(..., N, P)");
+  }
+
+  // 1. Extract batch dimensions
+  std::vector<int> batchdimA(shapeA.begin(), shapeA.end() - 2);
+  std::vector<int> batchdimB(shapeB.begin(), shapeB.end() - 2);
+
+  std::vector<int> broadcasted_batch_shape = Tensor<T>::infer_broadcast_shape(
+      Tensor<T>(batchdimA), Tensor<T>(batchdimB));
+
+  std::vector<int> result_shape = broadcasted_batch_shape;
+  result_shape.push_back(M);
+  result_shape.push_back(P);
+
+  // Broadcast inputs if needed
+  Tensor<T> A_broadcasted =
+      (batchdimA == broadcasted_batch_shape)
+          ? *this
+          : this->broadcast_to(
+                concat_vec(broadcasted_batch_shape, std::vector<int>{M, N}));
+
+  Tensor<T> B_broadcasted =
+      (batchdimB == broadcasted_batch_shape)
+          ? other
+          : other.broadcast_to(
+                concat_vec(broadcasted_batch_shape, std::vector<int>{N, P}));
+
+  // Create result tensor
+  Tensor<T> result(result_shape, this->requiresGrad() || other.requiresGrad());
+
+  // Fill the result
+  int batch_size = 1;
+  for (int i = 0; i < broadcasted_batch_shape.size(); ++i) {
+    batch_size *= broadcasted_batch_shape[i];
+  }
+
+  std::vector<int> batch_index(broadcasted_batch_shape.size(), 0);
+
+  do {
+    for (int m = 0; m < M; ++m) {
+      for (int p = 0; p < P; ++p) {
+        T sum = 0;
+        for (int n = 0; n < N; ++n) {
+          sum += (A_broadcasted)(concat_vec(batch_index, {m, n})) *
+                 (B_broadcasted)(concat_vec(batch_index, {n, p}));
+        }
+        (result)(concat_vec(batch_index, {m, p})) = sum;
+      }
+    }
+  } while (incrementIndex(batch_index, broadcasted_batch_shape));
+
+  if (result.requiresGrad()) {
+    // add the backwards function
+    std::shared_ptr<const Tensor<T>> this_shared = this->getSharedPtr();
+    std::shared_ptr<const Tensor<T>> Ab_shared = A_broadcasted.getSharedPtr();
+    std::shared_ptr<const Tensor<T>> other_shared = other.getSharedPtr();
+    std::shared_ptr<const Tensor<T>> Bb_shared = B_broadcasted.getSharedPtr();
+
+    result.setBackwardFunction([a_ptr = this_shared, b_ptr = other_shared,
+                                A_bcast = Ab_shared,
+                                B_bcast = Bb_shared](const Tensor<T> &result) {
+      // maths... yay
+      const Tensor<T> &grad = result.getGrad();
+
+      // C = A@B
+      if (a_ptr->requiresGrad()) {
+        Tensor<T> BTransposed = B_bcast->transpose(-2, -1);
+        Tensor<T> dA_raw = grad.matrixmul(BTransposed);
+        Tensor<T> dA = Tensor<T>::sum_over_broadcasted_axes(dA_raw, *a_ptr);
+        a_ptr->addGrad(dA);
+      }
+
+      if (b_ptr->requiresGrad()) {
+        Tensor<T> ATransposed = A_bcast->transpose(-2, -1);
+        Tensor<T> dB_raw = ATransposed.matrixmul(grad);
+        Tensor<T> dB = Tensor<T>::sum_over_broadcasted_axes(dB_raw, *b_ptr);
+        b_ptr->addGrad(dB);
+      }
+    });
+    // add the parents
+    if (this->requiresGrad())
+      result.addParent(this->getSharedPtr());
+
+    if (other.requiresGrad())
+      result.addParent(other.getSharedPtr());
+  }
+
+  return result;
+}
+
 // Util functions
 
 template <typename T> Tensor<T> Tensor<T>::sign() const {
@@ -554,6 +678,28 @@ template <typename T> Tensor<T> Tensor<T>::sign() const {
     else
       result_Data[i] = T(0);
   }
+  return result;
+}
+
+template <typename T> Tensor<T> Tensor<T>::transpose(int dim1, int dim2) const {
+  // Handle negative axes
+  int rank = shape.size();
+  dim1 = (dim1 < 0) ? dim1 + rank : dim1;
+  dim2 = (dim2 < 0) ? dim2 + rank : dim2;
+
+  if (dim1 < 0 || dim1 >= rank || dim2 < 0 || dim2 >= rank) {
+    throw std::invalid_argument("Invalid dimensions for transpose");
+  }
+
+  std::vector<int> new_shape = shape;
+  std::vector<int> new_strides = strides;
+
+  std::swap(new_shape[dim1], new_shape[dim2]);
+  std::swap(new_strides[dim1], new_strides[dim2]);
+
+  Tensor<T> result(new_shape, false); // false: no grad by default
+  result.shareData(this->data);       // reuses the same data buffer
+  result.setStrides(new_strides);     // only change how it's indexed
   return result;
 }
 
@@ -594,10 +740,47 @@ std::vector<int> Tensor<T>::infer_broadcast_shape(const Tensor<T> &tensorA,
   return result;
 }
 
+template <typename T>
+std::vector<int>
+Tensor<T>::infer_broadcast_shape(const std::vector<int> &shapeA,
+                                 const std::vector<int> &shapeB) {
+  int lenA = shapeA.size();
+  int lenB = shapeB.size();
+  int result_len = std::max(lenA, lenB);
+
+  // Prepare padded shapes with leading 1s
+  std::vector<int> paddedA(result_len, 1);
+  std::vector<int> paddedB(result_len, 1);
+
+  // Copy original shapes into padded vectors, right-aligned
+  for (int i = 0; i < lenA; ++i) {
+    paddedA[result_len - lenA + i] = shapeA[i];
+  }
+  for (int i = 0; i < lenB; ++i) {
+    paddedB[result_len - lenB + i] = shapeB[i];
+  }
+
+  // Compute broadcasted shape
+  std::vector<int> result(result_len);
+  for (int i = 0; i < result_len; ++i) {
+    int dimA = paddedA[i];
+    int dimB = paddedB[i];
+
+    if (dimA == dimB || dimA == 1 || dimB == 1) {
+      result[i] = std::max(dimA, dimB);
+    } else {
+      throw std::runtime_error("Shapes not compatible for broadcasting");
+    }
+  }
+
+  return result;
+}
+
 // this will return a "view" tensor which have the same internal data but
 // different strides, shape values
 template <typename T>
-Tensor<T> Tensor<T>::broadcast_to(const std::vector<int> &new_shape) const {
+Tensor<T> Tensor<T>::broadcast_to(const std::vector<int> &new_shape,
+                                  bool matrix_mul) const {
   int original_len = shape.size();
   int new_len = new_shape.size();
 
@@ -812,10 +995,6 @@ Tensor<T> Tensor<T>::sum_over_broadcasted_axes(const Tensor<T> &gradient,
 
 /*
 TODO:
-- CREATE A SUM OVER BROADCAST AXIS SO THAT BACKWARDS PASS WORKS FOR
-BROADCASTED TENSORS
-- USING THE SAME FUNCTIONS IMPLEMENT OTHER (EMELENT-WISE) OPERATIONS (SUB,
-DIV, MUL)
 - IMPLEMENT MATRIX MUL AND BATCH MATRIX MUL AS WELL AS FIGURE OUT THE PARTAIL
 DIFF FOR THEM
 - ADD MORE HELPER FUNCTIONS

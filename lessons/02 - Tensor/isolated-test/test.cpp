@@ -327,6 +327,91 @@ template <typename T> void multi_operation_chain_test() {
   scalar2.getGrad().print();
 }
 
+template <typename T> void test_matmul_broadcast() {
+  std::cout << "\n=== Test: Matrix Multiply with Broadcasting ===" << std::endl;
+
+  Tensor<T> A({2, 1, 3, 4}, true);
+  Tensor<T> B({1, 3, 4, 5}, true);
+
+  // Fill A with some values
+  A.setData({1, 2, 3, 4, 5,  6,  7,  8,  9,  10, 11, 12,
+
+             2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24});
+
+  // Fill B with some values
+  B.setData({
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  });
+
+  Tensor<T> C = A.matrixmul(B);
+
+  AutoDiffEngine<T> engine;
+  engine.backward(
+      C); // this will internally initialize C.grad to ones and propagate
+
+  // Now check gradients:
+  std::cout << "Gradient wrt A:" << std::endl;
+  A.getGrad().print();
+
+  std::cout << "Gradient wrt B:" << std::endl;
+  B.getGrad().print();
+
+  // Expected gradients can be derived manually:
+
+  // grad_C = ones with shape (2,3,3,5)
+
+  // dA = grad_C.matmul(B.transpose(-2, -1)) summed over broadcast axes
+  // dB = A.transpose(-2, -1).matmul(grad_C) summed over broadcast axes
+
+  // Since grad_C is all ones, dA and dB represent sums of slices of B^T and A^T
+  // respectively You can verify values by comparing printed results against
+  // expected calculations.
+}
+
+template <typename T> void test_ultimate_matrixmul_broadcast() {
+  std::cout << "\n=== Ultimate Test: Matrix Multiply with Broadcasting + "
+               "Elementwise Ops ==="
+            << std::endl;
+
+  // Create small-valued A to avoid saturation in sigmoid/tanh
+  Tensor<T> A({2, 1, 3, 4}, true);
+  A.setData({
+      0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, // batch 0
+      0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4  // batch 1
+  });
+
+  Tensor<T> B({1, 3, 4, 5}, true);
+  std::vector<T> B_data(1 * 3 * 4 * 5, static_cast<T>(0.1)); // fill with 0.1
+  B.setData(B_data);
+
+  // Build computation graph
+  Tensor<T> D = A.matrixmul(B);              // shape: (2,3,3,5)
+  Tensor<T> E = D.add(0.1);                  // scalar add
+  Tensor<T> F = E.multiply(D);               // elementwise multiply
+  Tensor<T> G = F.sigmoid();                 // sigmoid
+  Tensor<T> H = G.negate().add(1.0);         // -G + 1
+  Tensor<T> I = H.tanh();                    // tanh
+  Tensor<T> J = I.subtract(0.0).divide(1.0); // identity
+  Tensor<T> K = J.exp();                     // exp
+
+  // Run backward pass
+  AutoDiffEngine<T> engine;
+  engine.backward(K); // gradient of K is implicitly ones
+
+  // Print some outputs and gradients for verification
+
+  std::cout << "RESULT OF CALCULATION:" << std::endl;
+  K.print();
+
+  std::cout << "Gradient wrt A" << std::endl;
+  A.getGrad().print();
+
+  std::cout << "Gradient wrt B" << std::endl;
+  B.getGrad().print();
+}
+
 int main() {
   try {
     std::cout << "Starting Tensor Library Tests\n" << std::endl;
@@ -337,8 +422,10 @@ int main() {
     // multiLayeredTest<int>();
     // multi_operation_test<int>();
     // subtract_autoidff_test<int>();
-    multi_operation_chain_test<float>();
-    autodiff_all_ops_test<long double>();
+    // multi_operation_chain_test<float>();
+    // autodiff_all_ops_test<long double>();
+    // test_matmul_broadcast<double>();
+    test_ultimate_matrixmul_broadcast<double>();
 
     std::cout << "\n=== All tests completed successfully! ===" << std::endl;
 
