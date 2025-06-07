@@ -1,4 +1,5 @@
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -85,6 +86,12 @@ public:
 
   void addGrad(const Tensor<T> &grad) const {
     if (requires_gradient) {
+      std::cout << "Original Grad:" << std::endl;
+      gradient->print();
+
+      std::cout << "Grad to add:" << std::endl;
+      grad.print();
+
       gradient->addInPlace(grad);
     }
   }
@@ -208,14 +215,16 @@ template <typename T> class AutoDiffEngine {
 public:
   void backward(Tensor<T> &output) {
     std::vector<std::shared_ptr<const Tensor<T>>> topo_order;
-    std::unordered_set<std::shared_ptr<const Tensor<T>>> visited;
+    std::unordered_set<const Tensor<T> *> visited;
     dfs(output.getSharedPtr(), visited, topo_order);
 
     output.setGradOnes();
-
+    // it = input tensor
     for (auto it = topo_order.rbegin(); it != topo_order.rend(); ++it) {
 
       if ((*it)->requiresGrad() && (*it)->backwardsFunction) {
+        std::cout << "GRADIENT INPUT:" << std::endl;
+        (*it)->getGrad().print();
         (*it)->backwardsFunction(**it);
       }
     }
@@ -223,15 +232,16 @@ public:
 
 private:
   void dfs(std::shared_ptr<const Tensor<T>> node,
-           std::unordered_set<std::shared_ptr<const Tensor<T>>> &visited,
+           std::unordered_set<const Tensor<T> *> &visited,
            std::vector<std::shared_ptr<const Tensor<T>>> &order) {
-    if (visited.count(node))
+    if (visited.count(node.get()))
       return;
-    visited.insert(node);
+    visited.insert(node.get());
 
-    for (std::shared_ptr<const Tensor<T>> parent : node->parents) {
+    for (const auto &parent : node->parents) {
       dfs(parent, visited, order);
     }
+
     order.push_back(node);
   }
 };

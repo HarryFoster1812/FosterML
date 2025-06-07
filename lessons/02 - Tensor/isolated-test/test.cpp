@@ -370,40 +370,70 @@ template <typename T> void test_matmul_broadcast() {
   // expected calculations.
 }
 
+template <typename T> void test_autodiff_matrixmul() {
+  std::cout
+      << "\n=== Matrix multiplication test (because its not working ffs) ==="
+      << std::endl;
+
+  Tensor<T> A({2, 1, 2, 2}, true);
+  A.setData({0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8});
+
+  Tensor C = A.transpose(-1, -2);
+  std::cout << "TRANSPOSED A, EXPECTING 0.1 0.3  0.2 0.4   0.5 0.7    0.6 0.8"
+            << std::endl;
+  C.print();
+
+  Tensor<T> B({1, 3, 2, 5}, true);
+  std::vector<T> B_data(1 * 3 * 2 * 5, static_cast<T>(0.1)); // fill with 0.1
+  B.setData(B_data);
+
+  auto D = A.matrixmul(B);
+  std::cout << "Result of operation A @ B" << std::endl;
+  D.print();
+
+  AutoDiffEngine<T> engine;
+  engine.backward(D);
+
+  std::cout << "A GRAD" << std::endl;
+  A.getGrad().print();
+
+  std::cout << "B GRAD" << std::endl;
+  B.getGrad().print();
+}
+
 template <typename T> void test_ultimate_matrixmul_broadcast() {
   std::cout << "\n=== Ultimate Test: Matrix Multiply with Broadcasting + "
                "Elementwise Ops ==="
             << std::endl;
 
   // Create small-valued A to avoid saturation in sigmoid/tanh
-  Tensor<T> A({2, 1, 3, 4}, true);
+  Tensor<T> A({2, 1}, true);
   A.setData({
-      0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, // batch 0
-      0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4  // batch 1
+      0.1, // batch 0
+      0.2  // batch 1
   });
 
-  Tensor<T> B({1, 3, 4, 5}, true);
-  std::vector<T> B_data(1 * 3 * 4 * 5, static_cast<T>(0.1)); // fill with 0.1
+  Tensor<T> B({3, 1, 2}, true);
+  std::vector<T> B_data(3 * 1 * 2, static_cast<T>(0.1)); // fill with 0.1
   B.setData(B_data);
 
   // Build computation graph
-  Tensor<T> D = A.matrixmul(B);              // shape: (2,3,3,5)
-  Tensor<T> E = D.add(0.1);                  // scalar add
-  Tensor<T> F = E.multiply(D);               // elementwise multiply
-  Tensor<T> G = F.sigmoid();                 // sigmoid
-  Tensor<T> H = G.negate().add(1.0);         // -G + 1
-  Tensor<T> I = H.tanh();                    // tanh
-  Tensor<T> J = I.subtract(0.0).divide(1.0); // identity
-  Tensor<T> K = J.exp();                     // exp
-
-  // Run backward pass
-  AutoDiffEngine<T> engine;
-  engine.backward(K); // gradient of K is implicitly ones
-
-  // Print some outputs and gradients for verification
+  Tensor<T> D = A.matrixmul(B); // shape:
+  Tensor<T> E = D.add(0.1);     // scalar add
+  Tensor<T> F = E.multiply(D);  // elementwise multiply
+  // Tensor<T> G = F.sigmoid();                 // sigmoid
+  // Tensor<T> H = G.negate().add(1.0);         // -G + 1
+  // Tensor<T> I = H.tanh();                    // tanh
+  // Tensor<T> J = I.subtract(0.0).divide(1.0); // identity
+  // Tensor<T> K = J.exp(); // exp
 
   std::cout << "RESULT OF CALCULATION:" << std::endl;
-  K.print();
+  F.print();
+  // Run backward pass
+  AutoDiffEngine<T> engine;
+  engine.backward(F); // gradient of K is implicitly ones
+
+  // Print some outputs and gradients for verification
 
   std::cout << "Gradient wrt A" << std::endl;
   A.getGrad().print();
@@ -425,6 +455,7 @@ int main() {
     // multi_operation_chain_test<float>();
     // autodiff_all_ops_test<long double>();
     // test_matmul_broadcast<double>();
+    // test_autodiff_matrixmul<float>();
     test_ultimate_matrixmul_broadcast<double>();
 
     std::cout << "\n=== All tests completed successfully! ===" << std::endl;

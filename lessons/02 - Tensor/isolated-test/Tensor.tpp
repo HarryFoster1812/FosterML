@@ -567,9 +567,6 @@ Tensor<T> Tensor<T>::matrixmul(const Tensor<T> &other) const {
   int N2 = shapeB[ndimB - 2];
   int P = shapeB[ndimB - 1];
 
-  std::cout << shapeA << std::endl;
-  std::cout << shapeB << std::endl;
-
   if (N != N2) {
     throw std::invalid_argument("Inner dimensions for matmul must match: "
                                 "A(..., M, N) @ B(..., N, P)");
@@ -647,7 +644,12 @@ Tensor<T> Tensor<T>::matrixmul(const Tensor<T> &other) const {
       if (b_ptr->requiresGrad()) {
         Tensor<T> ATransposed = A_bcast->transpose(-2, -1);
         Tensor<T> dB_raw = ATransposed.matrixmul(grad);
+        std::cout << "dB RAW:\n" << dB_raw.getShape() << std::endl;
+        dB_raw.print();
         Tensor<T> dB = Tensor<T>::sum_over_broadcasted_axes(dB_raw, *b_ptr);
+        dB.print();
+        std::cout << "dB after sum shape:\n" << dB.getShape() << std::endl;
+        std::cout << "B target shape:\n" << b_ptr->getShape() << std::endl;
         b_ptr->addGrad(dB);
       }
     });
@@ -983,6 +985,10 @@ Tensor<T> Tensor<T>::sum_over_broadcasted_axes(const Tensor<T> &gradient,
     if (target_shape[i] == 1 && grad_shape[grad_axis] > 1) {
       axis_to_sum.push_back(grad_axis);
     }
+  }
+
+  if (axis_to_sum.empty()) {
+    return gradient;
   }
 
   // 3. Perform reduction (sum over axes_to_sum)
