@@ -1,0 +1,9 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/harryfoster/personalgit/FosterML/lessons/theory/manimations/media/videos/broadcast/1080p60/partial_movie_files/MatrixBroadcasting3D/4242032193_1477185080_223132457.mp4'
+file 'file:/home/harryfoster/personalgit/FosterML/lessons/theory/manimations/media/videos/broadcast/1080p60/partial_movie_files/MatrixBroadcasting3D/2796882004_2968904986_2252314848.mp4'
+file 'file:/home/harryfoster/personalgit/FosterML/lessons/theory/manimations/media/videos/broadcast/1080p60/partial_movie_files/MatrixBroadcasting3D/2796882004_2136671480_3342964134.mp4'
+file 'file:/home/harryfoster/personalgit/FosterML/lessons/theory/manimations/media/videos/broadcast/1080p60/partial_movie_files/MatrixBroadcasting3D/2796882004_2968904986_987898080.mp4'
+file 'file:/home/harryfoster/personalgit/FosterML/lessons/theory/manimations/media/videos/broadcast/1080p60/partial_movie_files/MatrixBroadcasting3D/120174369_548395513_3088325694.mp4'
+file 'file:/home/harryfoster/personalgit/FosterML/lessons/theory/manimations/media/videos/broadcast/1080p60/partial_movie_files/MatrixBroadcasting3D/2494838441_2968904986_3403254699.mp4'
+file 'file:/home/harryfoster/personalgit/FosterML/lessons/theory/manimations/media/videos/broadcast/1080p60/partial_movie_files/MatrixBroadcasting3D/3476962777_3360221331_3956882457.mp4'
+file 'file:/home/harryfoster/personalgit/FosterML/lessons/theory/manimations/media/videos/broadcast/1080p60/partial_movie_files/MatrixBroadcasting3D/3476962777_2968904986_3616324122.mp4'

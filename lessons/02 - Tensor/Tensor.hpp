@@ -31,7 +31,11 @@ private:
 
   void printRecursive(std::vector<int> &indices, int dim, int depth) const;
 
+  std::string debugName;
+
 public:
+  void setDebugName(std::string name) { debugName = name; }
+
   // Constructors
   Tensor(std::vector<int> shape_, bool requires_grad = false)
       : shape(shape_), requires_gradient(requires_grad) {
@@ -47,7 +51,7 @@ public:
   Tensor(const Tensor<T> &other)
       : data(other.data), shape(other.shape), strides(other.strides),
         requires_gradient(other.requires_gradient), parents(other.parents),
-        backwardsFunction(other.backwardsFunction) {
+        backwardsFunction(other.backwardsFunction), debugName(other.debugName) {
     if (requires_gradient) {
       gradient = std::make_unique<Tensor<T>>(*other.gradient);
     }

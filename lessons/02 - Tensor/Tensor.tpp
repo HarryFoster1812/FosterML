@@ -1,5 +1,5 @@
 #pragma once
-#include <algorithm> // for std::max
+#include <algorithm> // for std::maxAdd commentMore actions
 #include <cmath>
 #include <functional>
 #include <initializer_list>

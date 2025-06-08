@@ -1,1 +1,1 @@
-./.venv/bin/manim main.py $1
+./.venv/bin/manim $1

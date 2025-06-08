@@ -1,6 +1,7 @@
 #include "Tensor.hpp"
 #include <cassert>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 template <typename T> void test_basic_operations() {
@@ -412,15 +413,20 @@ template <typename T> void test_ultimate_matrixmul_broadcast() {
       0.1, // batch 0
       0.2  // batch 1
   });
+  A.setDebugName("A");
 
   Tensor<T> B({3, 1, 2}, true);
   std::vector<T> B_data(3 * 1 * 2, static_cast<T>(0.1)); // fill with 0.1
   B.setData(B_data);
-
+  B.setDebugName("B");
   // Build computation graph
   Tensor<T> D = A.matrixmul(B); // shape:
-  Tensor<T> E = D.add(0.1);     // scalar add
-  Tensor<T> F = E.multiply(D);  // elementwise multiply
+  D.setDebugName("D");
+
+  Tensor<T> E = D.add(0.1); // scalar add
+  E.setDebugName("E");
+  Tensor<T> F = E.multiply(D); // elementwise multiply
+  F.setDebugName("F");
   // Tensor<T> G = F.sigmoid();                 // sigmoid
   // Tensor<T> H = G.negate().add(1.0);         // -G + 1
   // Tensor<T> I = H.tanh();                    // tanh
