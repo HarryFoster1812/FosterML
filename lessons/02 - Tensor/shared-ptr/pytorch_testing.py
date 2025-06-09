@@ -17,17 +17,17 @@ def test_ultimate_matrixmul_broadcast():
     D = torch.matmul(A, B)       # Shape: [2, 3, 3, 5]
     E = D + 0.1                  # scalar add
     F = E * D                    # elementwise multiply
-    # G = torch.sigmoid(F)        # sigmoid
-    # H = 1.0 - G                  # negate + 1
-    # I = torch.tanh(H)           # tanh
-    # J = (I - 0.0) / 1.0          # identity operation
-    # K = torch.exp(J)            # exp
+    G = torch.sigmoid(F)        # sigmoid
+    H = 1.0 - G                  # negate + 1
+    I = torch.tanh(H)           # tanh
+    J = (I - 0.0) / 1.0          # identity operation
+    K = torch.exp(J)            # exp
 
     print("RESULT OF CALCULATION")
-    print(F)
+    print(K)
 
     # Step 3: Backprop
-    F.sum().backward()          # Equivalent to calling engine.backward(K)
+    K.sum().backward()          # Equivalent to calling engine.backward(K)
 
     # Step 4: Print outputs
 
