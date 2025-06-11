@@ -1,4 +1,8 @@
+#pragma once
+#include "Matrix.hpp"
 #include <random>
+
+namespace FosterML {
 
 /**
  * @brief Constructs a matrix with the given number of rows and columns,
@@ -219,3 +223,5 @@ template <typename T> void Matrix<T>::print(std::ostream& os) const {
         os << "\n";
     }
 }
+
+} // namespace FosterML

@@ -41,3 +41,8 @@ Yeah umm, according to this documentation: <https://en.cppreference.com/w/cpp/me
 i was using the bad design choice so i can only blame myself because it is in writing to not use that patten. I probably should not of made this my first c++ project. Well, i am extremely demotivated since all of the code i wrote need to be refactored to use shared pointers which is just a pain in the arse.
 
 IDK WHY BUT I WANT TO LEARN HOW TO USE MANIM (CREATE COOL REALLY COOL MATH ANIMATIONS JUST THINK ABOUT HOW BROADCASTING WOULD LOOK ANIMATED, IN MY HEAD IT LOOKS DAMN COOL. I CAN JUST IMAGINE IT LIKE A MATRIX THEN ROTATED A BIT AND A COOL DUPLICATION ANIMATION (THE VIRTUAL NUMBERS WOULD BE IN LIKE A GRAYED OUT COLOR))
+
+So i refactored everything and it seems to work but the code looks really bad.
+Looking at how other frameworks do stuff, they create op-nodes which they house the backwards function so what i could do is perform a bunch of complex calculations then define an opnode that would do all of those things in one function instead of storing each.
+
+Right now im using lambda functions which are not bad at all but they are not clean and modular so it needs to change but for right now im too lazy to fix it.

@@ -1,6 +1,8 @@
 #pragma once
-#include <stdio.h>
+#include <ostream>
 #include <vector>
+
+namespace FosterML {
 
 /**
  * @brief Template class representing a mathematical matrix.
@@ -184,7 +186,9 @@ template <typename T> class Matrix {
     int getCols() const { return cols; }
 };
 
-#include "./Matrix.tpp"
+} // namespace FosterML
+
+#include "Matrix.tpp"
 
 // TODO:
 // Add other random functions for NN initialisation (He and Xavier)
