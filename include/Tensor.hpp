@@ -214,3 +214,12 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
 
 #include "AutoDiffEngine.hpp"
 #include "Tensor.tpp"
+
+// TODO:
+// Add inverse / pseudo-inverse (Moore–Penrose)
+// Split the operations into a new modular classes "NodeOp" which has backwards
+// function predefined and stores parents Create a concat helper function Add
+// more manipulation / construction functions eg. remove column/row Add syntatic
+// sugar eg * + / ect Add support for tensor op scalar (make sure scalar is not
+// 0 for div)
+// Add documentation
