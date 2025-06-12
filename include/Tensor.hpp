@@ -209,6 +209,47 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
 
     void unravel_index(int flat_index, std::vector<int>& indices_out) const;
     void print() const;
+
+    // Matrix utils
+    void swap_rows(size_t i, size_t j) {
+        if (shape.size() != 2)
+            throw std::invalid_argument(
+                "Input Tensor must be matrix"); // Must be 2D
+        size_t cols = shape[1];
+
+        for (size_t c = 0; c < cols; ++c) {
+            std::swap(data[i * cols + c], data[j * cols + c]);
+        }
+    }
+
+    static TensorPtr<T> identityMatrix(int size) {
+        TensorPtr<T> result = TensorPtr<T>::create(
+            std::vector<int>({size, size})); // Initialize with zeros
+        for (int i = 0; i < size; ++i)
+            result(i, i) = T(1); // Set diagonal elements to 1
+        return result;
+    }
+
+    T det() const;
+
+    // Manipulation methods
+
+    // By default cat will try to add to the outer dimension
+    TensorPtr<T> cat(TensorPtr<T> dataToAdd, int dim = 0) const;
+    TensorPtr<T> cat(T dataFill, int dim = 0) const;
+
+    TensorPtr<T> pinverse() const;
+
+    static std::vector<T> eigenValues(const TensorPtr<T>& input) {
+        // sove for det(input - \lambda I) = 0
+    }
+
+    TensorPtr<T> clone() const {
+        TensorPtr<T> clone = TensorPtr<T>::create(shape, requires_gradient);
+        clone->setData(std::make_shared<std::vector<T>>(*data));
+        clone->setStrides(strides);
+        return clone;
+    }
 };
 } // namespace FosterML
 

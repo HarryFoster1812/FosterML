@@ -1033,6 +1033,66 @@ Tensor<T>::sum_over_broadcasted_axes(const TensorPtr<T>& gradient,
     // create a vector
     // return gradient.sum(axis_to_reduce, false);
 }
+
+template <typename T> T Tensor<T>::det() const {
+    size_t n = shape[0];
+    if (shape.size() != 2 || shape[0] != shape[1])
+        throw std::invalid_argument("input to det must be a square matrix");
+
+    TensorPtr<T> A = clone();
+    T det = 1;
+    int swaps = 0;
+
+    for (size_t i = 0; i < n; ++i) {
+        // Pivoting
+        size_t pivot = i;
+        for (size_t row = i + 1; row < n; ++row)
+            if (std::abs((*A)(row, i)) > std::abs((*A)(pivot, i)))
+                pivot = row;
+
+        if ((*A)(pivot, i) == 0)
+            return 0; // Singular
+
+        if (pivot != i) {
+            A->swap_rows(i, pivot);
+            swaps++;
+        }
+
+        det *= (*A)(i, i);
+
+        for (size_t j = i + 1; j < n; ++j) {
+            T factor = (*A)(j, i) / (*A)(i, i);
+            for (size_t k = i; k < n; ++k)
+                (*A)(j, k) -= factor * (*A)(i, k);
+        }
+    }
+
+    return (swaps % 2 == 0) ? det : -det;
+}
+
+template <typename T> TensorPtr<T> Tensor<T>::pinverse() const {
+    if (shape.size() != 2) {
+        throw std::invalid_argument(
+            "Inverse is only defined for matrix (2d tensors)");
+    }
+
+    // TensorPtr<T> aTa = matrixmul(transpose(-2, -1));
+    // std::vector<T> eigen_values = Tensor<T>::eigenValues(aTa);
+    // SVD returns:
+    // M=U \sigma V
+    //
+    // Inverse is:
+    // M^+=V W^{−1} U^T
+    // Where W^{-1} is the reciprocol of the diagonal \sigma values but has the
+    // same shape as A
+}
+
+template <typename T>
+TensorPtr<T> Tensor<T>::cat(TensorPtr<T> dataToAdd, int dim) const {
+    TensorPtr<T> result = TensorPtr<T>::create();
+}
+template <typename T> TensorPtr<T> Tensor<T>::cat(T dataFill, int dim) const {}
+
 } // namespace FosterML
 
 /*
