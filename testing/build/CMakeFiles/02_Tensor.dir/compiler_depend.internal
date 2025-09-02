@@ -22,9 +22,11 @@
 
 CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o
  /home/harryfoster/personalgit/FosterML/testing/02_Tensor/main.cpp
- /home/harryfoster/personalgit/FosterML/include/AutoDiffEngine.hpp
- /home/harryfoster/personalgit/FosterML/include/Tensor.hpp
- /home/harryfoster/personalgit/FosterML/include/Tensor.tpp
+ /home/harryfoster/personalgit/FosterML/include/core/AutoDiffEngine.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.tpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/TensorPtr.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/OpNode.hpp
  /usr/include/alloca.h
  /usr/include/asm-generic/bitsperlong.h
  /usr/include/asm-generic/errno-base.h

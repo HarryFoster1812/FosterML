@@ -1,5 +1,6 @@
 #pragma once
 #include "TensorPtr.hpp"
+#include "ops/base/OpNode.hpp"
 #include <functional>
 #include <memory>
 #include <stdexcept>
@@ -18,8 +19,7 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
     std::vector<int> strides;
     TensorPtr<T> gradient;
     bool requires_gradient = false;
-    std::vector<std::shared_ptr<Tensor<T>>> parents;
-    std::function<void(const Tensor<T>&)> backwardsFunction;
+    std::shared_ptr<OpNode<T>> creator; // op-node that created this tensor
     std::string debugName;
 
     void printRecursive(std::vector<int>& indices, int dim, int depth) const;
@@ -67,10 +67,6 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
         return gradient;
     }
 
-    void addParent(std::shared_ptr<Tensor<T>> parent) {
-        parents.push_back(parent);
-    }
-
     bool requiresGrad() const { return requires_gradient; }
 
     void zeroGrad() {
@@ -86,6 +82,8 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
             gradient->addInPlace(*grad);
         }
     }
+
+    const std::shared_ptr<OpNode<T>> getCreator() { return creator; }
 
     void addInPlace(const Tensor<T>& other) {
         if (data->size() != other.data->size())
@@ -121,10 +119,6 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
 
     void shareData(const std::shared_ptr<std::vector<T>>& shared_data) {
         data = shared_data;
-    }
-
-    void setBackwardFunction(std::function<void(const Tensor<T>&)> func) {
-        backwardsFunction = func;
     }
 
     // Core Arithmetic

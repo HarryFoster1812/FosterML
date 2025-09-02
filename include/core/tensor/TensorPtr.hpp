@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 
+// Tensor - Factory Pattern
 namespace FosterML {
 
 template <typename T> class Tensor;

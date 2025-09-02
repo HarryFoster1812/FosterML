@@ -1,6 +1,6 @@
 #include <cassert>
 #include <core/AutoDiffEngine.hpp>
-#include <core/Tensor/TensorPtr.hpp>
+#include <core/tensor/TensorPtr.hpp>
 #include <iostream>
 #include <memory>
 #include <vector>

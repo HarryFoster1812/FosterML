@@ -10,8 +10,8 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: \
  /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/cpu_defines.h \
  /usr/include/c++/15.2.1/pstl/pstl_config.h /usr/include/assert.h \
  /home/harryfoster/personalgit/FosterML/testing/../include/core/AutoDiffEngine.hpp \
- /home/harryfoster/personalgit/FosterML/testing/../include/core/Tensor/Tensor.hpp \
- /home/harryfoster/personalgit/FosterML/testing/../include/core/Tensor/TensorPtr.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/Tensor.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/TensorPtr.hpp \
  /usr/include/c++/15.2.1/memory /usr/include/c++/15.2.1/bits/memoryfwd.h \
  /usr/include/c++/15.2.1/bits/allocator.h \
  /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/c++allocator.h \
@@ -116,6 +116,7 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: \
  /usr/include/c++/15.2.1/bits/memory_resource.h \
  /usr/include/c++/15.2.1/cstddef \
  /usr/include/c++/15.2.1/bits/uses_allocator_args.h \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/base/OpNode.hpp \
  /usr/include/c++/15.2.1/functional \
  /usr/include/c++/15.2.1/bits/std_function.h \
  /usr/include/c++/15.2.1/unordered_map \
@@ -157,7 +158,7 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: \
  /usr/include/bits/types/error_t.h \
  /usr/include/c++/15.2.1/bits/charconv.h \
  /usr/include/c++/15.2.1/bits/basic_string.tcc \
- /home/harryfoster/personalgit/FosterML/testing/../include/core/Tensor/Tensor.tpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/Tensor.tpp \
  /usr/include/c++/15.2.1/algorithm \
  /usr/include/c++/15.2.1/bits/stl_algo.h \
  /usr/include/c++/15.2.1/bits/algorithmfwd.h \
@@ -216,5 +217,22 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: \
  /usr/include/c++/15.2.1/iostream /usr/include/c++/15.2.1/numeric \
  /usr/include/c++/15.2.1/bits/stl_numeric.h \
  /usr/include/c++/15.2.1/pstl/glue_numeric_defs.h \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/ops.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/ElementWiseOps.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/AbsOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/base/UnaryElementWiseOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/ExpOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/LogOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/NegateOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/SigmoidOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/SqrtOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/TanhOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/AddOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/base/BinaryElementWiseOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/DivOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/MultiplyOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/SubOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/matrix/MatrixOps.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/matrix/MatMulOp.hpp \
  /usr/include/c++/15.2.1/unordered_set \
  /usr/include/c++/15.2.1/bits/unordered_set.h
