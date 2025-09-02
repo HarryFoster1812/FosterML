@@ -61,6 +61,7 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
 
     const std::vector<int>& getShape() const { return shape; }
     const std::vector<T>& getData() const { return *data; }
+    std::vector<T>& getData() { return *data; } // mutable
     const TensorPtr<T>& getGrad() const {
         if (!gradient)
             throw std::runtime_error("Gradient not initialized");
@@ -84,6 +85,9 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
     }
 
     const std::shared_ptr<OpNode<T>> getCreator() { return creator; }
+    void setCreator(std::shared_ptr<OpNode<T>> newCreator) {
+        creator = newCreator;
+    }
 
     void addInPlace(const Tensor<T>& other) {
         if (data->size() != other.data->size())

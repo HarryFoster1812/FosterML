@@ -24,7 +24,25 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: /home/harryfoster/personalgit/Fos
   /home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.hpp \
   /home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.tpp \
   /home/harryfoster/personalgit/FosterML/include/core/tensor/TensorPtr.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/BinaryElementWiseOp.hpp \
   /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/OpNode.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/UnaryElementWiseOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/AbsOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/AddOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/DivOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/ElementWiseOps.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/ExpOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/LogOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/MultiplyOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/NegateOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SigmoidOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SqrtOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SubOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/TanhOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/matrix/MatMulOp.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/matrix/MatrixOps.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/ops.hpp \
+  /home/harryfoster/personalgit/FosterML/include/core/tensor/util.hpp \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \
@@ -365,21 +383,35 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: /home/harryfoster/personalgit/Fos
 
 /usr/include/c++/15.2.1/tr1/special_function_util.h:
 
-/usr/include/c++/15.2.1/bits/concept_check.h:
+/usr/include/c++/15.2.1/tr1/poly_laguerre.tcc:
 
-/usr/include/c++/15.2.1/bits/basic_ios.tcc:
+/usr/include/c++/15.2.1/tr1/modified_bessel_func.tcc:
 
-/usr/include/bits/libm-simd-decl-stubs.h:
+/usr/include/c++/15.2.1/tr1/legendre_function.tcc:
 
-/usr/include/c++/15.2.1/cerrno:
+/usr/include/c++/15.2.1/tr1/hypergeometric.tcc:
 
-/usr/include/bits/types/error_t.h:
+/usr/include/c++/15.2.1/tr1/gamma.tcc:
 
-/usr/include/c++/15.2.1/bits/requires_hosted.h:
+/usr/include/c++/15.2.1/tr1/exp_integral.tcc:
 
-/usr/include/c++/15.2.1/bits/alloc_traits.h:
+/usr/include/c++/15.2.1/tr1/ell_integral.tcc:
 
-/usr/include/asm/bitsperlong.h:
+/usr/include/c++/15.2.1/tr1/bessel_function.tcc:
+
+/usr/include/c++/15.2.1/string_view:
+
+/usr/include/c++/15.2.1/string:
+
+/usr/include/c++/15.2.1/streambuf:
+
+/usr/include/c++/15.2.1/stdexcept:
+
+/usr/include/c++/15.2.1/sstream:
+
+/usr/include/c++/15.2.1/pstl/pstl_config.h:
+
+/usr/include/c++/15.2.1/pstl/glue_numeric_defs.h:
 
 /usr/include/c++/15.2.1/algorithm:
 
@@ -393,35 +425,17 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: /home/harryfoster/personalgit/Fos
 
 /usr/include/c++/15.2.1/bits/memoryfwd.h:
 
-/usr/include/c++/15.2.1/bits/char_traits.h:
-
-/usr/include/c++/15.2.1/bits/exception.h:
-
-/usr/include/bits/math-vector.h:
-
 /usr/include/stdc-predef.h:
 
 /usr/include/c++/15.2.1/bits/stl_tempbuf.h:
 
 /usr/include/bits/types/struct_tm.h:
 
-/usr/include/c++/15.2.1/ext/atomicity.h:
-
-/usr/include/bits/types/struct_timespec.h:
-
-/usr/include/bits/struct_rwlock.h:
-
 /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/messages_members.h:
 
 /usr/include/bits/types/sigset_t.h:
 
-/usr/include/bits/types/mbstate_t.h:
-
 /usr/include/bits/types/locale_t.h:
-
-/usr/include/c++/15.2.1/bits/allocated_ptr.h:
-
-/usr/include/c++/15.2.1/istream:
 
 /usr/include/bits/types/clock_t.h:
 
@@ -429,19 +443,21 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: /home/harryfoster/personalgit/Fos
 
 /usr/include/bits/types/__fpos_t.h:
 
-/usr/include/bits/types/__mbstate_t.h:
-
-/usr/include/bits/stdio_lim.h:
-
-/usr/include/bits/types/__locale_t.h:
-
-/usr/include/c++/15.2.1/bits/sstream.tcc:
-
 /usr/include/bits/types/__fpos64_t.h:
 
 /usr/include/bits/time64.h:
 
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/LogOp.hpp:
+
 /usr/include/bits/stdlib-float.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/types/__mbstate_t.h:
+
+/usr/include/bits/types/error_t.h:
+
+/usr/include/c++/15.2.1/bits/requires_hosted.h:
 
 /usr/include/bits/waitstatus.h:
 
@@ -451,57 +467,67 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: /home/harryfoster/personalgit/Fos
 
 /usr/include/bits/setjmp.h:
 
-/usr/include/c++/15.2.1/bits/codecvt.h:
-
 /usr/include/bits/types/cookie_io_functions_t.h:
 
 /usr/include/c++/15.2.1/bits/stl_algobase.h:
 
 /usr/include/c++/15.2.1/bits/exception_ptr.h:
 
+/usr/include/bits/pthreadtypes-arch.h:
+
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stddef.h:
 
 /usr/include/asm-generic/int-ll64.h:
 
-/usr/include/bits/mathcalls-macros.h:
+/usr/include/bits/types/time_t.h:
 
-/usr/include/c++/15.2.1/bits/ostream.h:
+/usr/include/bits/struct_rwlock.h:
 
-/usr/include/bits/errno.h:
+/usr/include/c++/15.2.1/bits/exception.h:
 
-/usr/lib/libm.so:
+/usr/include/bits/math-vector.h:
 
-/usr/include/c++/15.2.1/backward/auto_ptr.h:
+/usr/include/c++/15.2.1/bits/char_traits.h:
 
-/usr/include/bits/flt-eval-method.h:
+/usr/include/bits/types/struct_timespec.h:
 
-/home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.tpp:
+/usr/include/c++/15.2.1/ext/atomicity.h:
 
-/home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.hpp:
+/usr/include/bits/long-double.h:
 
-/usr/lib/libc_nonshared.a:
+/usr/include/bits/locale.h:
 
-/usr/include/bits/wctype-wchar.h:
+/usr/include/bits/libm-simd-decl-stubs.h:
+
+/usr/include/c++/15.2.1/bits/basic_ios.tcc:
+
+/usr/include/c++/15.2.1/cerrno:
+
+/usr/include/bits/libc-header-start.h:
+
+/usr/include/c++/15.2.1/ostream:
 
 /usr/include/bits/iscanonical.h:
 
-/usr/include/c++/15.2.1/bits/allocator.h:
+/usr/include/bits/fp-logb.h:
 
-/usr/include/c++/15.2.1/cwctype:
+/usr/include/features-time64.h:
 
-/usr/include/c++/15.2.1/compare:
+/usr/include/c++/15.2.1/bits/quoted_string.h:
 
-/usr/lib/libmvec.so.1:
+/usr/include/bits/flt-eval-method.h:
 
-/usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/crtbeginS.o:
+/usr/include/bits/floatn.h:
+
+/usr/include/bits/floatn-common.h:
+
+/usr/include/asm-generic/errno-base.h:
 
 /usr/lib/libm.so.6:
 
 /usr/include/sys/select.h:
 
 /usr/include/c++/15.2.1/numeric:
-
-/usr/include/c++/15.2.1/tr1/exp_integral.tcc:
 
 /usr/include/bits/waitflags.h:
 
@@ -511,19 +537,49 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: /home/harryfoster/personalgit/Fos
 
 CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/ElementWiseOps.hpp:
+
 /usr/lib/ld-linux-x86-64.so.2:
 
 /usr/include/assert.h:
 
 /usr/include/c++/15.2.1/cstdio:
 
-/usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/c++config.h:
+/usr/include/bits/errno.h:
 
-/usr/include/bits/types/__sigset_t.h:
+/usr/include/bits/mathcalls-macros.h:
 
-/usr/include/asm-generic/posix_types.h:
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/NegateOp.hpp:
 
-/usr/include/c++/15.2.1/tr1/poly_laguerre.tcc:
+/usr/include/c++/15.2.1/bits/version.h:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SigmoidOp.hpp:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/ExpOp.hpp:
+
+/usr/include/c++/15.2.1/backward/auto_ptr.h:
+
+/usr/lib/libm.so:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.tpp:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.hpp:
+
+/usr/include/bits/types/__locale_t.h:
+
+/usr/include/c++/15.2.1/bits/sstream.tcc:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/MultiplyOp.hpp:
+
+/usr/include/c++/15.2.1/functional:
+
+/usr/include/bits/wctype-wchar.h:
+
+/usr/lib/libmvec.so.1:
+
+/usr/include/bits/pthread_stack_min-dynamic.h:
+
+/usr/lib/Scrt1.o:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/crtendS.o:
 
@@ -535,63 +591,17 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/OpNode.hpp:
 
-/usr/include/bits/types/time_t.h:
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/AddOp.hpp:
 
-/usr/include/c++/15.2.1/bits/charconv.h:
+/usr/include/bits/types/mbstate_t.h:
 
-/usr/include/bits/mathcalls-helper-functions.h:
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SqrtOp.hpp:
+
+/usr/include/c++/15.2.1/bits/ostream.h:
 
 /usr/lib/crti.o:
 
-/usr/include/bits/time.h:
-
-/usr/include/asm/posix_types.h:
-
-/home/harryfoster/personalgit/FosterML/include/core/AutoDiffEngine.hpp:
-
 /usr/include/c++/15.2.1/ext/alloc_traits.h:
-
-/usr/include/c++/15.2.1/bits/algorithmfwd.h:
-
-/home/harryfoster/personalgit/FosterML/testing/02_Tensor/main.cpp:
-
-/usr/include/c++/15.2.1/array:
-
-/usr/include/bits/fp-logb.h:
-
-/usr/include/features-time64.h:
-
-/usr/include/c++/15.2.1/bits/quoted_string.h:
-
-/usr/include/c++/15.2.1/bits/cpp_type_traits.h:
-
-/usr/include/bits/long-double.h:
-
-/usr/include/bits/types/struct_FILE.h:
-
-/usr/include/asm/types.h:
-
-/usr/include/c++/15.2.1/debug/debug.h:
-
-/usr/include/c++/15.2.1/bits/align.h:
-
-/usr/include/c++/15.2.1/bits/functexcept.h:
-
-/usr/include/c++/15.2.1/streambuf:
-
-/usr/include/asm-generic/errno-base.h:
-
-/usr/lib/libgcc_s.so.1:
-
-/usr/include/locale.h:
-
-/usr/lib/libstdc++.so:
-
-/usr/include/c++/15.2.1/tr1/beta_function.tcc:
-
-/usr/include/bits/pthreadtypes.h:
-
-/usr/lib/libc.so:
 
 /usr/include/wctype.h:
 
@@ -599,9 +609,63 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/bits/fp-fast.h:
 
+/usr/include/c++/15.2.1/tr1/beta_function.tcc:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/lib/libc.so:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/crtbeginS.o:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/matrix/MatrixOps.hpp:
+
+/usr/include/c++/15.2.1/bits/concept_check.h:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/util.hpp:
+
+/usr/include/c++/15.2.1/ext/numeric_traits.h:
+
+/usr/include/c++/15.2.1/iomanip:
+
+/usr/lib/libc_nonshared.a:
+
+/usr/include/bits/types/struct_FILE.h:
+
+/usr/include/asm/types.h:
+
+/usr/lib/libgcc_s.so.1:
+
+/usr/include/locale.h:
+
+/usr/lib/libstdc++.so:
+
 /usr/lib/libc.so.6:
 
+/usr/include/bits/mathcalls-narrow.h:
+
+/usr/include/c++/15.2.1/bits/localefwd.h:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/ops.hpp:
+
+/usr/include/bits/time.h:
+
+/home/harryfoster/personalgit/FosterML/include/core/AutoDiffEngine.hpp:
+
+/usr/include/asm/posix_types.h:
+
+/usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/c++config.h:
+
+/usr/include/bits/types/__sigset_t.h:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/AbsOp.hpp:
+
+/usr/include/asm-generic/posix_types.h:
+
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/libgcc.a:
+
+/usr/include/asm/bitsperlong.h:
+
+/usr/include/c++/15.2.1/bits/alloc_traits.h:
 
 /usr/include/bits/stdint-intn.h:
 
@@ -611,9 +675,9 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/c++/15.2.1/pstl/execution_defs.h:
 
-/usr/include/bits/locale.h:
-
 /usr/include/bits/byteswap.h:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/BinaryElementWiseOp.hpp:
 
 /usr/include/bits/uintn-identity.h:
 
@@ -622,6 +686,18 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 /usr/include/c++/15.2.1/bit:
 
 /usr/include/c++/15.2.1/bits/locale_facets_nonio.h:
+
+/usr/include/c++/15.2.1/bits/cpp_type_traits.h:
+
+/usr/include/c++/15.2.1/tr1/poly_hermite.tcc:
+
+/usr/include/bits/types/timer_t.h:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/TensorPtr.hpp:
+
+/usr/include/c++/15.2.1/system_error:
+
+/usr/include/asm/errno.h:
 
 /usr/include/bits/endian.h:
 
@@ -641,31 +717,39 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/bits/endianness.h:
 
-/usr/include/c++/15.2.1/tr1/ell_integral.tcc:
+/home/harryfoster/personalgit/FosterML/testing/02_Tensor/main.cpp:
 
-/usr/include/bits/floatn-common.h:
+/usr/include/c++/15.2.1/array:
 
-/usr/include/bits/floatn.h:
+/usr/include/c++/15.2.1/bits/algorithmfwd.h:
 
-/usr/include/bits/libc-header-start.h:
+/usr/include/c++/15.2.1/debug/debug.h:
 
-/usr/include/c++/15.2.1/ostream:
+/usr/include/c++/15.2.1/bits/align.h:
 
-/usr/lib/Scrt1.o:
+/usr/include/c++/15.2.1/bits/functexcept.h:
 
-/usr/include/bits/mathcalls-narrow.h:
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/TanhOp.hpp:
 
-/usr/include/bits/pthread_stack_min-dynamic.h:
+/usr/include/c++/15.2.1/bits/allocated_ptr.h:
 
-/usr/include/c++/15.2.1/pstl/pstl_config.h:
+/usr/include/c++/15.2.1/compare:
+
+/usr/include/c++/15.2.1/cwctype:
+
+/usr/include/c++/15.2.1/istream:
+
+/usr/include/c++/15.2.1/bits/allocator.h:
 
 /usr/include/c++/15.2.1/bits/atomic_base.h:
 
-/usr/include/bits/pthreadtypes-arch.h:
+/usr/include/bits/mathcalls-helper-functions.h:
+
+/usr/include/c++/15.2.1/bits/charconv.h:
+
+/usr/include/c++/15.2.1/bits/codecvt.h:
 
 /usr/include/c++/15.2.1/bits/cxxabi_init_exception.h:
-
-/usr/include/c++/15.2.1/stdexcept:
 
 /usr/include/c++/15.2.1/bits/erase_if.h:
 
@@ -699,6 +783,8 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/c++/15.2.1/bits/locale_conv.h:
 
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/DivOp.hpp:
+
 /usr/include/c++/15.2.1/bits/locale_facets.h:
 
 /usr/include/bits/types/struct_itimerspec.h:
@@ -725,8 +811,6 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/c++/15.2.1/bits/locale_facets_nonio.tcc:
 
-/usr/include/c++/15.2.1/bits/localefwd.h:
-
 /usr/include/c++/15.2.1/bits/memory_resource.h:
 
 /usr/include/bits/types.h:
@@ -741,13 +825,11 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/c++/15.2.1/bits/new_allocator.h:
 
-/usr/include/asm/errno.h:
-
-/usr/include/c++/15.2.1/system_error:
-
 /usr/include/c++/15.2.1/bits/basic_string.tcc:
 
 /usr/include/c++/15.2.1/bits/node_handle.h:
+
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/UnaryElementWiseOp.hpp:
 
 /usr/include/c++/15.2.1/bits/refwrap.h:
 
@@ -772,8 +854,6 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 /usr/include/sys/single_threaded.h:
 
 /usr/include/c++/15.2.1/bits/shared_ptr.h:
-
-/usr/include/c++/15.2.1/tr1/bessel_function.tcc:
 
 /usr/include/c++/15.2.1/bits/locale_classes.tcc:
 
@@ -821,6 +901,8 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/c++/15.2.1/cwchar:
 
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/matrix/MatMulOp.hpp:
+
 /usr/include/c++/15.2.1/bits/uniform_int_dist.h:
 
 /usr/include/c++/15.2.1/bits/unique_ptr.h:
@@ -829,13 +911,9 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/c++/15.2.1/bits/unordered_set.h:
 
-/usr/include/c++/15.2.1/pstl/glue_numeric_defs.h:
-
 /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/cpu_defines.h:
 
 /usr/include/c++/15.2.1/bits/uses_allocator.h:
-
-/usr/include/c++/15.2.1/tr1/hypergeometric.tcc:
 
 /usr/include/c++/15.2.1/bits/basic_string.h:
 
@@ -845,11 +923,11 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/bits/types/FILE.h:
 
+/home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SubOp.hpp:
+
 /usr/include/c++/15.2.1/bits/utility.h:
 
 /usr/include/c++/15.2.1/bits/vector.tcc:
-
-/usr/include/c++/15.2.1/bits/version.h:
 
 /usr/include/c++/15.2.1/cassert:
 
@@ -881,19 +959,13 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 
 /usr/include/c++/15.2.1/ext/concurrence.h:
 
-/usr/include/c++/15.2.1/ext/numeric_traits.h:
-
-/usr/include/c++/15.2.1/iomanip:
-
 /usr/include/c++/15.2.1/ext/type_traits.h:
-
-/usr/include/c++/15.2.1/functional:
 
 /usr/include/c++/15.2.1/initializer_list:
 
-/usr/include/c++/15.2.1/bits/atomic_lockfree_defines.h:
-
 /usr/include/bits/types/struct_timeval.h:
+
+/usr/include/c++/15.2.1/bits/atomic_lockfree_defines.h:
 
 /usr/include/c++/15.2.1/iosfwd:
 
@@ -906,21 +978,3 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o:
 /usr/include/c++/15.2.1/locale:
 
 /usr/include/c++/15.2.1/memory:
-
-/usr/include/c++/15.2.1/tr1/legendre_function.tcc:
-
-/usr/include/c++/15.2.1/sstream:
-
-/usr/include/c++/15.2.1/string:
-
-/usr/include/c++/15.2.1/string_view:
-
-/usr/include/c++/15.2.1/tr1/gamma.tcc:
-
-/usr/include/c++/15.2.1/tr1/modified_bessel_func.tcc:
-
-/home/harryfoster/personalgit/FosterML/include/core/tensor/TensorPtr.hpp:
-
-/usr/include/bits/types/timer_t.h:
-
-/usr/include/c++/15.2.1/tr1/poly_hermite.tcc:

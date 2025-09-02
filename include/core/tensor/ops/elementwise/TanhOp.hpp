@@ -2,6 +2,7 @@
 #include <cmath>
 #include <core/tensor/ops/base/UnaryElementWiseOp.hpp>
 
+namespace FosterML {
 template <typename T> class TanhOp : public UnaryElementwiseOp<T> {
   protected:
     T forward_single(const T& x) const override { return std::tanh(x); }
@@ -12,5 +13,6 @@ template <typename T> class TanhOp : public UnaryElementwiseOp<T> {
     }
 
   public:
-    SigmoidOp(TensorPtr<T> input) : UnaryElementwiseOp<T>(input) {}
+    TanhOp(TensorPtr<T> input) : UnaryElementwiseOp<T>(input) {}
 };
+} // namespace FosterML

@@ -2,6 +2,7 @@
 #include <cmath>
 #include <core/tensor/ops/base/UnaryElementWiseOp.hpp>
 
+namespace FosterML {
 template <typename T> class LogOp : public UnaryElementwiseOp<T> {
   protected:
     T forward_single(const T& x) const override { return std::log(x); }
@@ -13,3 +14,4 @@ template <typename T> class LogOp : public UnaryElementwiseOp<T> {
   public:
     LogOp(TensorPtr<T> input) : UnaryElementwiseOp<T>(input) {}
 };
+} // namespace FosterML

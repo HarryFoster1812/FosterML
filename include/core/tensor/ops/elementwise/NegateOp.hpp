@@ -1,6 +1,7 @@
 #pragma once
 #include <core/tensor/ops/base/UnaryElementWiseOp.hpp>
 
+namespace FosterML {
 template <typename T> class NegateOp : public UnaryElementwiseOp<T> {
   protected:
     T forward_single(const T& x) const override { return -x; }
@@ -12,3 +13,4 @@ template <typename T> class NegateOp : public UnaryElementwiseOp<T> {
   public:
     NegateOp(TensorPtr<T> input) : UnaryElementwiseOp<T>(input) {}
 };
+} // namespace FosterML

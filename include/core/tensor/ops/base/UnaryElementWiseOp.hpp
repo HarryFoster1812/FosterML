@@ -1,6 +1,8 @@
 #pragma once
 #include "OpNode.hpp"
 
+namespace FosterML {
+
 template <typename T> class UnaryElementwiseOp : public OpNode<T> {
   public:
     UnaryElementwiseOp(TensorPtr<T> input)
@@ -17,7 +19,7 @@ template <typename T> class UnaryElementwiseOp : public OpNode<T> {
         const auto& in_data = this->inputs[0]->getData();
         auto& out_data = this->output->getData();
         for (size_t i = 0; i < in_data.size(); ++i)
-            (*out_data)[i] = forward_single(in_data[i]);
+            out_data[i] = forward_single(in_data[i]);
     }
 
     void backward() override {
@@ -28,10 +30,12 @@ template <typename T> class UnaryElementwiseOp : public OpNode<T> {
         auto grad_in = this->inputs[0]->getGrad();
         const auto& in_data = this->inputs[0]->getData();
         const auto& out_data = this->output->getData();
+        auto& grad_in_data = grad_in->getData();
 
-        for (size_t i = 0; i < grad_out->size(); ++i) {
-            (*grad_in->getData())[i] +=
-                backward_single((*in_data)[i], (*out_data)[i], (*grad_out)[i]);
+        for (size_t i = 0; i < grad_out.size(); ++i) {
+            grad_in_data[i] +=
+                backward_single(in_data[i], out_data[i], grad_out[i]);
         }
     }
 };
+} // namespace FosterML

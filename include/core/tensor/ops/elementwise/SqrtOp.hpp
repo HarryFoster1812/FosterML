@@ -2,6 +2,7 @@
 #include <cmath>
 #include <core/tensor/ops/base/UnaryElementWiseOp.hpp>
 
+namespace FosterML {
 template <typename T> class SqrtOp : public UnaryElementwiseOp<T> {
   protected:
     T forward_single(const T& x) const override { return std::sqrt(x); }
@@ -14,3 +15,4 @@ template <typename T> class SqrtOp : public UnaryElementwiseOp<T> {
   public:
     SqrtOp(TensorPtr<T> input) : UnaryElementwiseOp<T>(input) {}
 };
+} // namespace FosterML

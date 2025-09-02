@@ -1,6 +1,8 @@
 #pragma once
 #include "OpNode.hpp"
 
+namespace FosterML {
+
 template <typename T> class BinaryElementwiseOp : public OpNode<T> {
   public:
     BinaryElementwiseOp(TensorPtr<T> A, TensorPtr<T> B)
@@ -16,42 +18,43 @@ template <typename T> class BinaryElementwiseOp : public OpNode<T> {
     void forward() override {
         auto A = this->inputs[0];
         auto B = this->inputs[1];
-        auto A_b = (A->getShape() == output->getShape())
+        auto A_b = (A->getShape() == this->output->getShape())
                        ? A
-                       : A->broadcast_to(output->getShape());
-        auto B_b = (B->getShape() == output->getShape())
+                       : A->broadcast_to(this->output->getShape());
+        auto B_b = (B->getShape() == this->output->getShape())
                        ? B
-                       : B->broadcast_to(output->getShape());
+                       : B->broadcast_to(this->output->getShape());
 
-        std::vector<int> idx(output->getShape().size(), 0);
+        std::vector<int> idx(this->output->getShape().size(), 0);
         do {
-            (*output)(idx) = forward_single((*A_b)(idx), (*B_b)(idx));
-        } while (Tensor<T>::incrementIndex(idx, output->getShape()));
+            (*this->output)(idx) = forward_single((*A_b)(idx), (*B_b)(idx));
+        } while (Tensor<T>::incrementIndex(idx, this->output->getShape()));
     }
 
     void backward() override {
-        auto grad_out = output->getGrad();
+        auto grad_out = this->output->getGrad();
         auto A = this->inputs[0];
         auto B = this->inputs[1];
         auto gradA = TensorPtr<T>::create(A->getShape());
         auto gradB = TensorPtr<T>::create(B->getShape());
 
-        auto A_b = (A->getShape() == output->getShape())
+        auto A_b = (A->getShape() == this->output->getShape())
                        ? A
-                       : A->broadcast_to(output->getShape());
-        auto B_b = (B->getShape() == output->getShape())
+                       : A->broadcast_to(this->output->getShape());
+        auto B_b = (B->getShape() == this->output->getShape())
                        ? B
-                       : B->broadcast_to(output->getShape());
+                       : B->broadcast_to(this->output->getShape());
 
-        std::vector<int> idx(output->getShape().size(), 0);
+        std::vector<int> idx(this->output->getShape().size(), 0);
         do {
             auto [gA, gB] =
                 backward_single((*A_b)(idx), (*B_b)(idx), (*grad_out)(idx));
             (*gradA)(idx) = gA;
             (*gradB)(idx) = gB;
-        } while (Tensor<T>::incrementIndex(idx, output->getShape()));
+        } while (Tensor<T>::incrementIndex(idx, this->output->getShape()));
 
         A->addGrad(gradA);
         B->addGrad(gradB);
     }
 };
+} // namespace FosterML

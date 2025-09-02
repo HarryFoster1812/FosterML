@@ -26,7 +26,25 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o
  /home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.hpp
  /home/harryfoster/personalgit/FosterML/include/core/tensor/Tensor.tpp
  /home/harryfoster/personalgit/FosterML/include/core/tensor/TensorPtr.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/BinaryElementWiseOp.hpp
  /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/OpNode.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/base/UnaryElementWiseOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/AbsOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/AddOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/DivOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/ElementWiseOps.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/ExpOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/LogOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/MultiplyOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/NegateOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SigmoidOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SqrtOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/SubOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/elementwise/TanhOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/matrix/MatMulOp.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/matrix/MatrixOps.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/ops/ops.hpp
+ /home/harryfoster/personalgit/FosterML/include/core/tensor/util.hpp
  /usr/include/alloca.h
  /usr/include/asm-generic/bitsperlong.h
  /usr/include/asm-generic/errno-base.h

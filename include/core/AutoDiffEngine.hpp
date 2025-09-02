@@ -1,4 +1,5 @@
 #pragma once
+#include "tensor/TensorPtr.hpp"
 #include <core/tensor/Tensor.hpp>
 #include <memory>
 #include <unordered_set>
@@ -9,7 +10,7 @@ namespace FosterML {
 template <typename T> class AutoDiffEngine {
   public:
     void backward(TensorPtr<T> output) {
-        std::vector<std::shared_ptr<Tensor<T>>> topo_order;
+        std::vector<TensorPtr<T>> topo_order;
         std::unordered_set<Tensor<T>*> visited;
         buildTopo(output->getCreator(), visited, topo_order);
 
@@ -27,13 +28,13 @@ template <typename T> class AutoDiffEngine {
   private:
     void buildTopo(std::shared_ptr<OpNode<T>> node,
                    std::unordered_set<Tensor<T>*>& visited,
-                   std::vector<std::shared_ptr<Tensor<T>>>& order) {
+                   std::vector<TensorPtr<T>>& order) {
         if (!node)
             return;
 
         for (auto& input : node->getInputs()) {
-            if (!visited.count(input.get())) {
-                visited.insert(input.get());
+            if (!visited.count(input.get_shared_ptr().get())) {
+                visited.insert(input.get_shared_ptr().get());
                 buildTopo(input->getCreator(), visited, order);
             }
         }

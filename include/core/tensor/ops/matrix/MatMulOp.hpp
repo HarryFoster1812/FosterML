@@ -1,5 +1,6 @@
 #pragma once
-#include "../base/OpNode.hpp"
+#include <core/tensor/ops/base/OpNode.hpp>
+#include <core/tensor/util.hpp>
 #include <memory>
 
 namespace FosterML {
@@ -10,7 +11,6 @@ template <typename T> class MatMulOp : public OpNode<T> {
         : OpNode<T>({A, B}, inferResultShape(A, B),
                     A->requiresGrad() || B->requiresGrad()) {}
 
-  protected:
     // Forward
     void forward() override {
         const auto& A = this->inputs[0];

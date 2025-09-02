@@ -2,6 +2,7 @@
 #include <core/tensor/ops/base/BinaryElementWiseOp.hpp>
 #include <limits>
 
+namespace FosterML {
 template <typename T> class DivOp : public BinaryElementwiseOp<T> {
   protected:
     T forward_single(const T& a, const T& b) const override {
@@ -24,3 +25,4 @@ template <typename T> class DivOp : public BinaryElementwiseOp<T> {
   public:
     DivOp(TensorPtr<T> A, TensorPtr<T> B) : BinaryElementwiseOp<T>(A, B) {}
 };
+} // namespace FosterML

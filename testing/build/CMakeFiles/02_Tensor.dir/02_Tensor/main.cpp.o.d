@@ -10,7 +10,6 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: \
  /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/cpu_defines.h \
  /usr/include/c++/15.2.1/pstl/pstl_config.h /usr/include/assert.h \
  /home/harryfoster/personalgit/FosterML/testing/../include/core/AutoDiffEngine.hpp \
- /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/Tensor.hpp \
  /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/TensorPtr.hpp \
  /usr/include/c++/15.2.1/memory /usr/include/c++/15.2.1/bits/memoryfwd.h \
  /usr/include/c++/15.2.1/bits/allocator.h \
@@ -116,6 +115,7 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: \
  /usr/include/c++/15.2.1/bits/memory_resource.h \
  /usr/include/c++/15.2.1/cstddef \
  /usr/include/c++/15.2.1/bits/uses_allocator_args.h \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/Tensor.hpp \
  /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/base/OpNode.hpp \
  /usr/include/c++/15.2.1/functional \
  /usr/include/c++/15.2.1/bits/std_function.h \
@@ -234,5 +234,6 @@ CMakeFiles/02_Tensor.dir/02_Tensor/main.cpp.o: \
  /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/elementwise/SubOp.hpp \
  /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/matrix/MatrixOps.hpp \
  /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/ops/matrix/MatMulOp.hpp \
+ /home/harryfoster/personalgit/FosterML/testing/../include/core/tensor/util.hpp \
  /usr/include/c++/15.2.1/unordered_set \
  /usr/include/c++/15.2.1/bits/unordered_set.h

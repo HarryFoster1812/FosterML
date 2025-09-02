@@ -123,7 +123,8 @@ template <typename T> TensorPtr<T> Tensor<T>::add(const T& scalar) const {
     return this->add(scalarTensor);
 }
 
-template <typename T> TensorPtr<T> Tensor<T>::add(const TensorPtr<T>& other) {
+template <typename T>
+TensorPtr<T> Tensor<T>::add(const TensorPtr<T>& other) const {
     auto node = std::make_shared<AddOp<T>>(
         TensorPtr<T>(this->shared_from_this()), other);
     node->forward();
@@ -187,8 +188,8 @@ template <typename T> TensorPtr<T> Tensor<T>::divide(const T& scalar) const {
 template <typename T>
 TensorPtr<T> Tensor<T>::negate() const // element-wise negation (-x)
 {
-    auto node = std::make_shared<NegateOp<T>>(
-        TensorPtr<T>(this->shared_from_this()), other);
+    auto node =
+        std::make_shared<NegateOp<T>>(TensorPtr<T>(this->shared_from_this()));
     node->forward();
     return node->getOutput();
 }
@@ -248,17 +249,10 @@ Tensor<T>::tanh() const // element-// element-wise hyperbolic tangent
     return node->getOutput();
 }
 
-std::vector<int> concat_vec(const std::vector<int>& a,
-                            const std::vector<int>& b) {
-    std::vector<int> result = a;
-    result.insert(result.end(), b.begin(), b.end());
-    return result;
-}
-
 // this @ other
 template <typename T>
 TensorPtr<T> Tensor<T>::matrixmul(const TensorPtr<T>& other) const {
-    auto node = std::make_shared<MatMulOp>(
+    auto node = std::make_shared<MatMulOp<T>>(
         TensorPtr<T>(this->shared_from_this()), other);
     node->forward();
     return node->getOutput();

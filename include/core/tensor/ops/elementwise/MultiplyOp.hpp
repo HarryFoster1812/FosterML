@@ -1,6 +1,7 @@
 #pragma once
 #include <core/tensor/ops/base/BinaryElementWiseOp.hpp>
 
+namespace FosterML {
 template <typename T> class MultiplyOp : public BinaryElementwiseOp<T> {
   protected:
     T forward_single(const T& a, const T& b) const override { return a * b; }
@@ -14,3 +15,4 @@ template <typename T> class MultiplyOp : public BinaryElementwiseOp<T> {
   public:
     MultiplyOp(TensorPtr<T> A, TensorPtr<T> B) : BinaryElementwiseOp<T>(A, B) {}
 };
+} // namespace FosterML
