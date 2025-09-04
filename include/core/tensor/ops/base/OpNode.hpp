@@ -17,8 +17,6 @@ class OpNode : public std::enable_shared_from_this<OpNode<T>> {
         : inputs(inputs_) {
         output = TensorPtr<T>::create(outputShape, requiresGrad);
         // link back so that the output knows its creator node
-        if (requiresGrad)
-            output->setCreator(this->shared_from_this());
     }
 
     virtual ~OpNode() = default;
@@ -34,5 +32,15 @@ class OpNode : public std::enable_shared_from_this<OpNode<T>> {
     void setOutput(TensorPtr<T> out) { output = out; }
 
     const std::vector<TensorPtr<T>>& getInputs() const { return inputs; }
+
+    template <typename Derived, typename... Args>
+    static std::shared_ptr<Derived> create(Args&&... args) {
+        auto op = std::make_shared<Derived>(std::forward<Args>(args)...);
+
+        if (op->getOutput()->requiresGrad())
+            op->getOutput()->setCreator(op);
+
+        return op;
+    }
 };
 } // namespace FosterML

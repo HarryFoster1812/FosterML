@@ -2,6 +2,7 @@
 #include <core/tensor/ops/base/OpNode.hpp>
 #include <core/tensor/util.hpp>
 #include <memory>
+#include <vector>
 
 namespace FosterML {
 
@@ -16,32 +17,47 @@ template <typename T> class MatMulOp : public OpNode<T> {
         const auto& A = this->inputs[0];
         const auto& B = this->inputs[1];
 
-        auto A_b = (A->getShape() == this->output->getShape())
-                       ? A
-                       : A->broadcast_to(this->output->getShape());
-        auto B_b = (B->getShape() == this->output->getShape())
-                       ? B
-                       : B->broadcast_to(this->output->getShape());
+        const auto& shapeA = A->getShape();
+        const auto& shapeB = B->getShape();
+        const auto& outShape = this->output->getShape();
 
-        const auto& shape = this->output->getShape();
-        std::vector<int> index(shape.size(), 0);
+        int M = shapeA[shapeA.size() - 2];
+        int N = shapeA[shapeA.size() - 1];
+        int P = shapeB[shapeB.size() - 1];
 
+        std::vector<int> batchdimA(shapeA.begin(), shapeA.end() - 2);
+        std::vector<int> batchdimB(shapeB.begin(), shapeB.end() - 2);
+
+        // Batch dimensions
+        std::vector<int> batchShape(outShape.begin(), outShape.end() - 2);
+
+        // Broadcast A to [batch..., M, N]
+        TensorPtr<T> A_broadcasted =
+            (batchdimA == batchShape)
+                ? A
+                : A->broadcast_to(
+                      concat_vec(batchShape, std::vector<int>{M, N}));
+
+        TensorPtr<T> B_broadcasted =
+            (batchdimB == batchShape)
+                ? B
+                : B->broadcast_to(
+                      concat_vec(batchShape, std::vector<int>{N, P}));
+
+        // Perform matmul
+        std::vector<int> index(batchShape.size(), 0);
         do {
-            int M = shape[shape.size() - 2];
-            int P = shape[shape.size() - 1];
-            int N = A->getShape().back();
-
             for (int m = 0; m < M; ++m) {
                 for (int p = 0; p < P; ++p) {
                     T sum = 0;
                     for (int n = 0; n < N; ++n) {
-                        sum += (*A_b)(concat_vec(index, {m, n})) *
-                               (*B_b)(concat_vec(index, {n, p}));
+                        sum += (*A_broadcasted)(concat_vec(index, {m, n})) *
+                               (*B_broadcasted)(concat_vec(index, {n, p}));
                     }
                     (*this->output)(concat_vec(index, {m, p})) = sum;
                 }
             }
-        } while (Tensor<T>::incrementIndex(index, shape));
+        } while (Tensor<T>::incrementIndex(index, batchShape));
     }
 
     // Backward
@@ -97,5 +113,4 @@ template <typename T> class MatMulOp : public OpNode<T> {
         return result_shape;
     }
 };
-
 } // namespace FosterML

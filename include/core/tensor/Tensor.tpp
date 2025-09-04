@@ -125,7 +125,7 @@ template <typename T> TensorPtr<T> Tensor<T>::add(const T& scalar) const {
 
 template <typename T>
 TensorPtr<T> Tensor<T>::add(const TensorPtr<T>& other) const {
-    auto node = std::make_shared<AddOp<T>>(
+    auto node = OpNode<T>::template create<AddOp<T>>(
         TensorPtr<T>(this->shared_from_this()), other);
     node->forward();
     return node->getOutput();
@@ -142,7 +142,7 @@ template <typename T> TensorPtr<T> Tensor<T>::subtract(const T& scalar) const {
 
 template <typename T>
 TensorPtr<T> Tensor<T>::subtract(const TensorPtr<T>& other) const {
-    auto node = std::make_shared<SubOp<T>>(
+    auto node = OpNode<T>::template create<SubOp<T>>(
         TensorPtr<T>(this->shared_from_this()), other);
     node->forward();
     return node->getOutput();
@@ -151,7 +151,7 @@ TensorPtr<T> Tensor<T>::subtract(const TensorPtr<T>& other) const {
 template <typename T>
 TensorPtr<T> Tensor<T>::multiply(const TensorPtr<T>& other) const {
 
-    auto node = std::make_shared<MultiplyOp<T>>(
+    auto node = OpNode<T>::template create<MultiplyOp<T>>(
         TensorPtr<T>(this->shared_from_this()), other);
     node->forward();
     return node->getOutput();
@@ -168,7 +168,7 @@ template <typename T> TensorPtr<T> Tensor<T>::multiply(const T& scalar) const {
 
 template <typename T>
 TensorPtr<T> Tensor<T>::divide(const TensorPtr<T>& other) const {
-    auto node = std::make_shared<DivOp<T>>(
+    auto node = OpNode<T>::template create<DivOp<T>>(
         TensorPtr<T>(this->shared_from_this()), other);
     node->forward();
     return node->getOutput();
@@ -188,8 +188,8 @@ template <typename T> TensorPtr<T> Tensor<T>::divide(const T& scalar) const {
 template <typename T>
 TensorPtr<T> Tensor<T>::negate() const // element-wise negation (-x)
 {
-    auto node =
-        std::make_shared<NegateOp<T>>(TensorPtr<T>(this->shared_from_this()));
+    auto node = OpNode<T>::template create<NegateOp<T>>(
+        TensorPtr<T>(this->shared_from_this()));
     node->forward();
     return node->getOutput();
 }
@@ -197,8 +197,8 @@ TensorPtr<T> Tensor<T>::negate() const // element-wise negation (-x)
 template <typename T>
 TensorPtr<T> Tensor<T>::abs() const // element-wise negation (-x)
 {
-    auto node =
-        std::make_shared<AbsOp<T>>(TensorPtr<T>(this->shared_from_this()));
+    auto node = OpNode<T>::template create<AbsOp<T>>(
+        TensorPtr<T>(this->shared_from_this()));
     node->forward();
     return node->getOutput();
 }
@@ -206,8 +206,8 @@ TensorPtr<T> Tensor<T>::abs() const // element-wise negation (-x)
 template <typename T>
 TensorPtr<T> Tensor<T>::sqrt() const // element-wise square root
 {
-    auto node =
-        std::make_shared<SqrtOp<T>>(TensorPtr<T>(this->shared_from_this()));
+    auto node = OpNode<T>::template create<SqrtOp<T>>(
+        TensorPtr<T>(this->shared_from_this()));
     node->forward();
     return node->getOutput();
 }
@@ -215,8 +215,8 @@ TensorPtr<T> Tensor<T>::sqrt() const // element-wise square root
 template <typename T>
 TensorPtr<T> Tensor<T>::exp() const // element-// element-wise exponentiation
 {
-    auto node =
-        std::make_shared<ExpOp<T>>(TensorPtr<T>(this->shared_from_this()));
+    auto node = OpNode<T>::template create<ExpOp<T>>(
+        TensorPtr<T>(this->shared_from_this()));
     node->forward();
     return node->getOutput();
 }
@@ -224,8 +224,8 @@ TensorPtr<T> Tensor<T>::exp() const // element-// element-wise exponentiation
 template <typename T>
 TensorPtr<T> Tensor<T>::log() const // element-// element-wise natural logarithm
 {
-    auto node =
-        std::make_shared<LogOp<T>>(TensorPtr<T>(this->shared_from_this()));
+    auto node = OpNode<T>::template create<LogOp<T>>(
+        TensorPtr<T>(this->shared_from_this()));
     node->forward();
     return node->getOutput();
 }
@@ -233,8 +233,8 @@ TensorPtr<T> Tensor<T>::log() const // element-// element-wise natural logarithm
 template <typename T>
 TensorPtr<T> Tensor<T>::sigmoid() const // element-// element-wise sigmoid
 {
-    auto node =
-        std::make_shared<SigmoidOp<T>>(TensorPtr<T>(this->shared_from_this()));
+    auto node = OpNode<T>::template create<SigmoidOp<T>>(
+        TensorPtr<T>(this->shared_from_this()));
     node->forward();
     return node->getOutput();
 }
@@ -243,8 +243,8 @@ template <typename T>
 TensorPtr<T>
 Tensor<T>::tanh() const // element-// element-wise hyperbolic tangent
 {
-    auto node =
-        std::make_shared<TanhOp<T>>(TensorPtr<T>(this->shared_from_this()));
+    auto node = OpNode<T>::template create<TanhOp<T>>(
+        TensorPtr<T>(this->shared_from_this()));
     node->forward();
     return node->getOutput();
 }
@@ -252,7 +252,7 @@ Tensor<T>::tanh() const // element-// element-wise hyperbolic tangent
 // this @ other
 template <typename T>
 TensorPtr<T> Tensor<T>::matrixmul(const TensorPtr<T>& other) const {
-    auto node = std::make_shared<MatMulOp<T>>(
+    auto node = OpNode<T>::template create<MatMulOp<T>>(
         TensorPtr<T>(this->shared_from_this()), other);
     node->forward();
     return node->getOutput();
