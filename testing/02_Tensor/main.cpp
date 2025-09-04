@@ -117,6 +117,8 @@ template <typename T> void test_ultimate_matrixmul_broadcast() {
     TensorPtr<T> J = I->subtract(0.0)->divide(1.0); // identity
     TensorPtr<T> K = J->exp();                      // exp
 
+    // K = (e^(tan(-(e^((A@B+0.1)*(A@B))/(e^((((A@B)+0.1)*(A@B)))+1))+1)))
+
     std::cout << "RESULT OF CALCULATION:" << std::endl;
     K->print();
     // Run backward pass
@@ -132,22 +134,122 @@ template <typename T> void test_ultimate_matrixmul_broadcast() {
     B->getGrad()->print();
 }
 
+// Numerical gradient checker for two-input graph
+template <typename T>
+void check_graph_gradient(
+    TensorPtr<T> A, TensorPtr<T> B,
+    std::function<TensorPtr<T>(TensorPtr<T>, TensorPtr<T>)> fn, T eps = 1e-4,
+    T tol = 1e-2) {
+    // Reset gradients
+    A->zeroGrad();
+    B->zeroGrad();
+
+    // Forward + backward (analytical)
+    auto output = fn(A, B);
+    AutoDiffEngine<T> engine;
+    engine.backward(output);
+
+    auto gradA_analytical = A->getGrad();
+    auto gradB_analytical = B->getGrad();
+
+    auto dataA = A->getData();
+    auto dataB = B->getData();
+
+    auto gradA_numerical = TensorPtr<T>::create(A->getShape(), false);
+    auto gradB_numerical = TensorPtr<T>::create(B->getShape(), false);
+
+    // --- Numerical gradient w.r.t A ---
+    for (size_t i = 0; i < dataA.size(); i++) {
+        T orig = dataA[i];
+
+        dataA[i] = orig + eps;
+        A->setData(dataA);
+        T f_plus = fn(A, B)->sum()->item();
+
+        dataA[i] = orig - eps;
+        A->setData(dataA);
+        T f_minus = fn(A, B)->sum()->item();
+
+        dataA[i] = orig;
+        A->setData(dataA);
+
+        (gradA_numerical->getData())[i] = (f_plus - f_minus) / (2 * eps);
+    }
+
+    // --- Numerical gradient w.r.t B ---
+    for (size_t i = 0; i < dataB.size(); i++) {
+        T orig = dataB[i];
+
+        dataB[i] = orig + eps;
+        B->setData(dataB);
+        T f_plus = fn(A, B)->sum()->item();
+
+        dataB[i] = orig - eps;
+        B->setData(dataB);
+        T f_minus = fn(A, B)->sum()->item();
+
+        dataB[i] = orig;
+        B->setData(dataB);
+
+        (gradB_numerical->getData())[i] = (f_plus - f_minus) / (2 * eps);
+    }
+
+    // Print comparison
+    std::cout << "Analytical grad A:\n";
+    gradA_analytical->print();
+    std::cout << "Numerical grad A:\n";
+    gradA_numerical->print();
+
+    std::cout << "Analytical grad B:\n";
+    gradB_analytical->print();
+    std::cout << "Numerical grad B:\n";
+    gradB_numerical->print();
+
+    // Optional assert
+    auto gA = gradA_analytical->getData();
+    auto gB = gradB_analytical->getData();
+    auto nA = gradA_numerical->getData();
+    auto nB = gradB_numerical->getData();
+
+    for (size_t i = 0; i < gA.size(); i++)
+        assert(std::fabs(gA[i] - nA[i]) < tol &&
+               "Gradient check failed for A!");
+
+    for (size_t i = 0; i < gB.size(); i++)
+        assert(std::fabs(gB[i] - nB[i]) < tol &&
+               "Gradient check failed for B!");
+}
+
 int main() {
     try {
         std::cout << "Starting Tensor Library Tests\n" << std::endl;
-        // test_basic_operations<double>();
-        // test_basic_operations<int>();
-        // test_broadcast1<int>();
-        // test_scalar_broadcast<int>();
-        // multiLayeredTest<int>();
-        // multi_operation_test<int>();
-        // subtract_autoidff_test<int>();
-        // multi_operation_chain_test<float>();
-        // autodiff_all_ops_test<long double>();
-        // test_matmul_broadcast<double>();
-        // test_autodiff_matrixmul<float>();
+        // // Example tensors
+        // // ---------------------------
+        // TensorPtr<double> A = TensorPtr<double>::create({2, 2}, true);
+        // A->setData({0.1, 0.2, 0.3, 0.4});
+        // A->setDebugName("A");
+        //
+        // TensorPtr<double> B = TensorPtr<double>::create({2, 2}, true);
+        // B->setData({0.5, 0.6, 0.7, 0.8});
+        // B->setDebugName("B");
+        //
+        // // ---------------------------
+        // // Define the full computation graph
+        // // ---------------------------
+        // auto graph_fn = [](TensorPtr<double> A, TensorPtr<double> B) {
+        //     auto D = A->matrixmul(B);
+        //     auto E = D->add(0.1);
+        //     auto F = E->multiply(D);
+        //     auto G = F->sigmoid();
+        //     auto H = G->negate()->add(1.0);
+        //     auto I = H->tanh();
+        //     auto J = I->subtract(0.0)->divide(1.0); // identity
+        //     auto K = J->exp();
+        //     return K;
+        // };
+        //
+        // check_graph_gradient<double>(A, B, graph_fn);
         test_ultimate_matrixmul_broadcast<double>();
-
         std::cout << "\n=== All tests completed successfully! ===" << std::endl;
 
     } catch (const std::exception& e) {

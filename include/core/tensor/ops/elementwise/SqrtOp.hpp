@@ -9,7 +9,7 @@ template <typename T> class SqrtOp : public UnaryElementwiseOp<T> {
     T backward_single(const T& x, const T& y,
                       const T& grad_output) const override {
         // partial z / partial x = 1/(2*sqrt(x))
-        return grad_output / (2 * std::sqrt(x));
+        return grad_output / (2 * y);
     }
 
   public:

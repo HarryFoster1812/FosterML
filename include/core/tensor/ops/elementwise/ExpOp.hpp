@@ -8,7 +8,7 @@ template <typename T> class ExpOp : public UnaryElementwiseOp<T> {
     T forward_single(const T& x) const override { return std::exp(x); }
     T backward_single(const T& x, const T& y,
                       const T& grad_output) const override {
-        return std::exp(x) * grad_output;
+        return y * grad_output;
     }
 
   public:

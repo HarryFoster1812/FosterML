@@ -10,7 +10,7 @@ template <typename T> class SigmoidOp : public UnaryElementwiseOp<T> {
     }
     T backward_single(const T& x, const T& y,
                       const T& grad_output) const override {
-        return grad_output * (y / (1 - y));
+        return grad_output * (y * (1 - y));
     }
 
   public:

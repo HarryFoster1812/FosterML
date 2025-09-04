@@ -4,6 +4,7 @@
 #include <functional>
 #include <memory>
 #include <stdexcept>
+#include <type_traits>
 #include <vector>
 namespace FosterML {
 
@@ -125,6 +126,14 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
         data = shared_data;
     }
 
+    T& item() {
+        if (shape.size() != 0) {
+            throw std::runtime_error(
+                "Can only call item on a scalar tensor (where shape = {})");
+        }
+        return (*data)[0];
+    }
+
     // Core Arithmetic
     TensorPtr<T> add(const TensorPtr<T>& other) const;
     TensorPtr<T> add(const T& scalar) const;
@@ -146,7 +155,8 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
     TensorPtr<T> sign() const;
 
     TensorPtr<T> matrixmul(const TensorPtr<T>& other) const;
-    TensorPtr<T> sum(const std::vector<int>& axis, bool keepdims) const;
+    TensorPtr<T> sum(const std::vector<int>& axis = {},
+                     bool keepdims = false) const;
     TensorPtr<T> broadcast_to(const std::vector<int>& new_shape,
                               bool matrix_mul = false) const;
     TensorPtr<T> transpose(int dim1, int dim2) const;
@@ -221,8 +231,7 @@ class Tensor : public std::enable_shared_from_this<Tensor<T>> {
 
 // TODO:
 // Add inverse / pseudo-inverse (Moore–Penrose)
-// Split the operations into a new modular classes "NodeOp" which has backwards
-// function predefined and stores parents Create a concat helper function Add
+// Create a concat helper function Add
 // more manipulation / construction functions eg. remove column/row Add syntatic
 // sugar eg * + / ect Add support for tensor op scalar (make sure scalar is not
 // 0 for div)
